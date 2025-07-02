@@ -90,8 +90,51 @@ class DemoApp {
         text: `Hello, what can i do for you?`
       }
     ]);
-    this.client.updateSession({ instructions: OPENAI_INSTRUCTIONS });
-    this.client.updateSession({ input_audio_transcription: { model: 'whisper-1' } });
+    await this.client.updateSession({ 
+        instructions: OPENAI_INSTRUCTIONS,
+        input_audio_transcription: { model: 'whisper-1' },
+        voice: 'shimmer'
+    });
+
+    // Voice control tools
+    this.client.addTool({
+        'name': 'change_voice',
+        'description': 'Changes the AI voice to a different option',
+        'parameters': {
+            'type': 'object',
+            'properties': {
+                'voice': {
+                    'type': 'string',
+                    'enum': ['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer'],
+                    'description': 'The voice to switch to'
+                }
+            },
+            'required': ['voice']
+        }
+    }, async ({ voice }) => {
+        await this.client.updateSession({ voice });
+        return { 
+            success: true,
+            message: `Voice changed to ${voice}`,
+            current_voice: voice
+        };
+    });
+
+    this.client.addTool({
+        'name': 'get_current_voice',
+        'description': 'Returns the currently active voice',
+        'parameters': {
+            'type': 'object',
+            'properties': {}
+        }
+    }, async () => {
+        const session = await this.client.getSession();
+        return { 
+            current_voice: session.voice || 'default'
+        };
+    });
+
+    // Camera reference tool
     this.client.addTool({
         'name': 'detect_reference_question',
         'description': 'Returns the answers to context-dependent questions that refer to previously mentioned or visually present subjects (e.g., \'What is this?\', \'How do I solve this?\')',
@@ -151,7 +194,6 @@ class DemoApp {
           };
         }
       });
-
   }
 
   async startRecording() {
