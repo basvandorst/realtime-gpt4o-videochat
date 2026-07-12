@@ -39,7 +39,7 @@
   .photo { background: #efece6; position: relative; }
   .photo.noimg { background: linear-gradient(150deg, #e9e4db, #d5ccbd 60%, #c9bda9); }
   .photo.noimg::after {
-    content: "BRDA"; position: absolute; inset: 0;
+    content: var(--wm, "BRDA"); position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
     font-family: var(--sans); font-weight: 600; font-size: .68rem;
     letter-spacing: .5em; text-indent: .5em; color: rgba(17,17,17,.28);
@@ -209,6 +209,46 @@
   .hood-body p { color: var(--grey); font-size: .82rem; margin-top: 6px; letter-spacing: .04em; }
   .hood-body .n { display: inline-block; margin-top: 10px; font-size: .66rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; border-bottom: 1px solid var(--ink); padding-bottom: 3px; }
 
+  /* ---------- stedenkiezer ---------- */
+  .city-pick {
+    display: inline-flex; align-items: center; gap: 8px;
+    text-decoration: none; font-size: .72rem; font-weight: 600;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--ink);
+    justify-self: start;
+  }
+  .city-pick .chev { font-size: .6rem; color: var(--grey); }
+  .city-pick:hover { text-decoration: underline; text-underline-offset: 5px; }
+
+  /* ---------- wereld / steden ---------- */
+  .world { padding: 0 0 90px; }
+  .world-lede {
+    font-family: var(--serif); font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+    line-height: 1.5; max-width: 58ch; margin-bottom: 56px;
+  }
+  .world-lede em { font-style: italic; }
+  .world-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px 40px; }
+  @media (max-width: 900px) { .world-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .world-grid { grid-template-columns: 1fr; } }
+  .land h3 {
+    font-family: var(--sans); font-size: .7rem; font-weight: 600;
+    letter-spacing: .28em; text-transform: uppercase; color: var(--grey);
+    padding-bottom: 12px; border-bottom: 1px solid var(--line); margin-bottom: 6px;
+  }
+  .land ul { list-style: none; }
+  .land li a, .land li .soon {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+    padding: 12px 0; text-decoration: none; border-bottom: 1px solid transparent;
+  }
+  .land .cnaam { font-family: var(--serif); font-size: 1.3rem; line-height: 1.2; }
+  .land li a:hover .cnaam { text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+  .land .n {
+    font-size: .6rem; font-weight: 600; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--grey); white-space: nowrap;
+  }
+  .land li a.actief .n { color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 2px; }
+  .land .soon { color: var(--grey); }
+  .land .soon .cnaam { color: #b8b2a8; }
+
   /* ---------- newsletter ---------- */
   .newsletter { background: #f7f6f4; padding: 96px 0; text-align: center; }
   .newsletter .kicker { font-size: .7rem; font-weight: 600; letter-spacing: .28em; text-transform: uppercase; color: var(--grey); }
@@ -260,15 +300,15 @@
     <div class="socials">
       <span><b>12K</b> volgers</span>
       <span><b>8K</b> lezers</span>
-      <span><b>24</b> nieuwe spots</span>
+      <span><b id="stat-spots">24</b> nieuwe spots</span>
     </div>
   </div>
 </div>
 
 <nav>
   <div class="nav-inner">
-    <div class="burger" aria-hidden="true"><span></span><span></span><span></span></div>
-    <a class="logo" href="#">BRDA</a>
+    <a class="city-pick" href="#steden"><span id="city-pick-label">Breda</span> <span class="chev">▾</span></a>
+    <a class="logo" id="logo" href="#">BRDA</a>
     <div class="nav-right">
       <a href="#binnenkort">Binnenkort</a>
       <a href="#netgeopend">Net geopend</a>
@@ -282,11 +322,11 @@
     <div class="hero-grid">
 
       <a class="feature reveal" href="#binnenkort">
-        <div class="photo"><img src="https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?w=1200&q=80" alt="Grachtenpanden en water in de binnenstad"></div>
-        <div class="cat">De openingskalender <span class="sep">—</span> Zomer 2026</div>
-        <h1><b>Breda ontwaakt</b> — <em>wat er net open is en wat er deze zomer aankomt</em></h1>
-        <p class="excerpt">Van natuurwijn achter een naamloze groene deur tot een dakterras boven de Grote Kerk: elke opening op datum — zodat je er eerder bent dan de rest.</p>
-        <div class="byline">Door BRDA redactie <span>· wekelijks bijgewerkt</span></div>
+        <div class="photo" id="feature-photo"></div>
+        <div class="cat" id="feature-cat">De openingskalender <span class="sep">—</span> Breda</div>
+        <h1 id="feature-title"><b>Breda ontwaakt</b> — <em>wat er net open is en wat er deze zomer aankomt</em></h1>
+        <p class="excerpt" id="feature-excerpt"></p>
+        <div class="byline" id="feature-byline">Door de redactie <span>· wekelijks bijgewerkt</span></div>
       </a>
 
       <div class="side-grid" id="side-grid"></div>
@@ -311,32 +351,23 @@
 
 <section class="quote">
   <div class="wrap reveal">
-    <p class="q">"Vergeet de lijstjes voor toeristen — <em>de beste adressen van Breda fluister je door.</em>"</p>
-    <div class="who">BRDA — het zomernummer</div>
+    <p class="q">"Vergeet de lijstjes voor toeristen — <em>de beste adressen van <span id="quote-stad">Breda</span> fluister je door.</em>"</p>
+    <div class="who" id="quote-who">BRDA — het zomernummer</div>
   </div>
 </section>
 
 <section class="hoods" id="buurten">
   <div class="wrap">
     <div class="sec-title reveal"><h2>De buurten</h2></div>
-    <div class="hood-grid">
-      <a class="hood reveal" href="#netgeopend">
-        <div class="photo"><img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=700&q=80" alt="Europese straat met karakter"></div>
-        <div class="hood-body"><h3>Belcrum</h3><p>Loodsen, brouwerijen, studio's</p><span class="n">7 nieuwe spots</span></div>
-      </a>
-      <a class="hood reveal" href="#netgeopend">
-        <div class="photo"><img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=700&q=80" alt="Caféterras in de ochtend"></div>
-        <div class="hood-body"><h3>Haagdijk</h3><p>De straat die iedereen straks kent</p><span class="n">6 nieuwe spots</span></div>
-      </a>
-      <a class="hood reveal" href="#netgeopend">
-        <div class="photo"><img src="https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?w=700&q=80" alt="Historische binnenstad aan het water"></div>
-        <div class="hood-body"><h3>Centrum</h3><p>De klassiekers, opnieuw uitgevonden</p><span class="n">6 nieuwe spots</span></div>
-      </a>
-      <a class="hood reveal" href="#netgeopend">
-        <div class="photo"><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=80" alt="Koffiemoment op een rustige ochtend"></div>
-        <div class="hood-body"><h3>Ginneken</h3><p>Dorps, groen en verrassend goed</p><span class="n">5 nieuwe spots</span></div>
-      </a>
-    </div>
+    <div class="hood-grid" id="hood-grid"></div>
+  </div>
+</section>
+
+<section class="world" id="steden">
+  <div class="wrap">
+    <div class="sec-title reveal"><h2>Kies je stad</h2></div>
+    <p class="world-lede reveal">Begonnen in Breda, onderweg naar de wereld. <em>Elke stad zijn eigen letters,</em> elke week nieuwe adressen — van dorp tot metropool.</p>
+    <div class="world-grid" id="world-grid"></div>
   </div>
 </section>
 
@@ -355,36 +386,131 @@
 
 <footer>
   <div class="wrap">
-    <a class="logo" href="#">BRDA</a>
+    <a class="logo" id="logo-footer" href="#">BRDA</a>
     <div class="links">
       <a href="#binnenkort">Binnenkort</a>
       <a href="#buurten">Buurten</a>
+      <a href="#steden">Steden</a>
       <a href="#nieuwsbrief">Nieuwsbrief</a>
     </div>
-    <small>© 2026 BRDA — met liefde gemaakt voor Breda · getoonde adressen zijn illustratief</small>
+    <small>© 2026 — begonnen in Breda, onderweg naar de wereld · getoonde adressen zijn illustratief</small>
   </div>
 </footer>
 
 <script>
-  // ---- Spots: één lijst, gesorteerd op openingsdatum ----
-  // Alles met een datum in de toekomst komt onder "Binnenkort open",
-  // de rest (nieuwste eerst) onder "Net geopend".
-  const SPOTS = [
-    { naam: "Ronde Bonen", tagline: "twaalf stoelen, één branderij, nul compromissen", cat: "Koffie", buurt: "Ginnekenweg", meta: "€ · vanaf 08:00", datum: "2026-07-10", img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80", alt: "Koffie met latte art" },
-    { naam: "Bar Barrière", tagline: "vijftig natuurwijnen achter een groene deur", cat: "Wijn", buurt: "Haagdijk", meta: "€€ · vanaf 17:00", datum: "2026-07-03", img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&q=80", alt: "Glazen natuurwijn" },
-    { naam: "Noedelbar Noord", tagline: "handgetrokken noedels in een oude loods", cat: "Eten", buurt: "Belcrum", meta: "€€ · alleen diner", datum: "2026-06-26", img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80", alt: "Ramen met ei en lente-ui" },
-    { naam: "Boterham & Zo", tagline: "de croissant die om 11:30 uitverkocht is", cat: "Bakkerij", buurt: "Centrum", meta: "€ · 08:00–16:00", datum: "2026-06-18", img: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800&q=80", alt: "Verse croissants" },
-    { naam: "Studio Stof", tagline: "Dutch design, droogbloemen en keramiek", cat: "Winkels", buurt: "Ginneken", meta: "di t/m za", datum: "2026-05-29", img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80", alt: "Minimalistische conceptstore" },
-    { naam: "Café Vroeg", tagline: "licht, ruim en de hele dag ontbijt", cat: "Koffie", buurt: "Centrum", meta: "€ · 08:00–17:00", datum: "2026-05-15", img: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80", alt: "Licht café-interieur" },
-    { naam: "Dakterras DK9", tagline: "aperitivo met de Grote Kerk op ooghoogte", cat: "Drinken", buurt: "Centrum", meta: "€€€ · reserveren aangeraden", datum: "2026-07-18", img: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&q=80", alt: "Cocktails bij golden hour" },
-    { naam: "Loods Lumen", tagline: "lichtkunst en open studio's aan het water", cat: "Cultuur", buurt: "Havenkwartier", meta: "gratis · do t/m zo", datum: "2026-07-25", img: "https://images.unsplash.com/photo-1531058020387-3be344556be6?w=800&q=80", alt: "Lichtinstallatie tijdens een avondexpositie" },
-    { naam: "De Leeszaal", tagline: "boekhandel, leescafé en klein podium ineen", cat: "Cultuur", buurt: "Belcrum", meta: "gratis · dagelijks", datum: "2026-08-02", img: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&q=80", alt: "Boekenkasten tot aan het plafond" },
-    { naam: "Lange Tafels", tagline: "één avond, één straat, samen eten in Belcrum", cat: "Eten", buurt: "Belcrum", meta: "€€ · eenmalig zomerdiner", datum: "2026-08-15", img: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80", alt: "Samen aan tafel in de stad" },
+  // ---- Platform: steden met spots, alles op openingsdatum ----
+  const FOTO = {
+    koffie:    { src: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80", alt: "Koffie met latte art" },
+    cafe:      { src: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80",   alt: "Licht café-interieur" },
+    wijn:      { src: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&q=80", alt: "Glazen natuurwijn" },
+    croissant: { src: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800&q=80",   alt: "Verse croissants" },
+    ramen:     { src: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80", alt: "Ramen met ei en lente-ui" },
+    cocktails: { src: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&q=80", alt: "Cocktails bij golden hour" },
+    galerie:   { src: "https://images.unsplash.com/photo-1531058020387-3be344556be6?w=800&q=80", alt: "Lichtinstallatie tijdens een avondexpositie" },
+    boeken:    { src: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&q=80", alt: "Boekenkasten tot aan het plafond" },
+    winkel:    { src: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80", alt: "Minimalistische conceptstore" },
+    tafel:     { src: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80", alt: "Samen aan tafel in de stad" },
+    straat:    { src: "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1200&q=80", alt: "Europese straat met karakter" },
+    gracht:    { src: "https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?w=1200&q=80", alt: "Grachtenpanden en water in de binnenstad" },
+  };
+
+  const STEDEN = {
+    breda: {
+      naam: "Breda", code: "BRDA", land: "Nederland",
+      hero: FOTO.straat,
+      intro: "Van natuurwijn achter een naamloze groene deur tot een dakterras boven de Grote Kerk: elke opening op datum — zodat je er eerder bent dan de rest.",
+      buurten: [
+        { naam: "Belcrum", sub: "Loodsen, brouwerijen, studio's", foto: FOTO.straat },
+        { naam: "Haagdijk", sub: "De straat die iedereen straks kent", foto: FOTO.cafe },
+        { naam: "Centrum", sub: "De klassiekers, opnieuw uitgevonden", foto: FOTO.gracht },
+        { naam: "Ginneken", sub: "Dorps, groen en verrassend goed", foto: FOTO.koffie },
+      ],
+      spots: [
+        { naam: "Ronde Bonen", tagline: "twaalf stoelen, één branderij, nul compromissen", cat: "Koffie", buurt: "Ginnekenweg", meta: "€ · vanaf 08:00", datum: "2026-07-10", foto: FOTO.koffie },
+        { naam: "Bar Barrière", tagline: "vijftig natuurwijnen achter een groene deur", cat: "Wijn", buurt: "Haagdijk", meta: "€€ · vanaf 17:00", datum: "2026-07-03", foto: FOTO.wijn },
+        { naam: "Noedelbar Noord", tagline: "handgetrokken noedels in een oude loods", cat: "Eten", buurt: "Belcrum", meta: "€€ · alleen diner", datum: "2026-06-26", foto: FOTO.ramen },
+        { naam: "Boterham & Zo", tagline: "de croissant die om 11:30 uitverkocht is", cat: "Bakkerij", buurt: "Centrum", meta: "€ · 08:00–16:00", datum: "2026-06-18", foto: FOTO.croissant },
+        { naam: "Studio Stof", tagline: "Dutch design, droogbloemen en keramiek", cat: "Winkels", buurt: "Ginneken", meta: "di t/m za", datum: "2026-05-29", foto: FOTO.winkel },
+        { naam: "Café Vroeg", tagline: "licht, ruim en de hele dag ontbijt", cat: "Koffie", buurt: "Centrum", meta: "€ · 08:00–17:00", datum: "2026-05-15", foto: FOTO.cafe },
+        { naam: "Dakterras DK9", tagline: "aperitivo met de Grote Kerk op ooghoogte", cat: "Drinken", buurt: "Centrum", meta: "€€€ · reserveren aangeraden", datum: "2026-07-18", foto: FOTO.cocktails },
+        { naam: "Loods Lumen", tagline: "lichtkunst en open studio's aan het water", cat: "Cultuur", buurt: "Havenkwartier", meta: "gratis · do t/m zo", datum: "2026-07-25", foto: FOTO.galerie },
+        { naam: "De Leeszaal", tagline: "boekhandel, leescafé en klein podium ineen", cat: "Cultuur", buurt: "Belcrum", meta: "gratis · dagelijks", datum: "2026-08-02", foto: FOTO.boeken },
+        { naam: "Lange Tafels", tagline: "één avond, één straat, samen eten in Belcrum", cat: "Eten", buurt: "Belcrum", meta: "€€ · eenmalig zomerdiner", datum: "2026-08-15", foto: FOTO.tafel },
+      ],
+    },
+    amsterdam: {
+      naam: "Amsterdam", code: "AMS", land: "Nederland",
+      hero: FOTO.gracht,
+      intro: "Van een branderij in een Noordse loods tot natuurwijn in de Jordaan: elke opening op datum, van De Pijp tot ver voorbij het IJ.",
+      buurten: [
+        { naam: "De Pijp", sub: "Markt, terras en nieuwe keukens", foto: FOTO.cafe },
+        { naam: "Noord", sub: "Loodsen en broedplaatsen aan het IJ", foto: FOTO.straat },
+        { naam: "Jordaan", sub: "Klein, karakter, kwaliteit", foto: FOTO.gracht },
+        { naam: "Oost", sub: "Waar de stad nu naartoe beweegt", foto: FOTO.koffie },
+      ],
+      spots: [
+        { naam: "Bak & Boon", tagline: "specialty coffee tussen de marktkramen", cat: "Koffie", buurt: "De Pijp", meta: "€ · vanaf 08:00", datum: "2026-07-08", foto: FOTO.koffie },
+        { naam: "Wijnlokaal West", tagline: "natuurwijn en kaarslicht in de Jordaan", cat: "Wijn", buurt: "Jordaan", meta: "€€ · vanaf 16:00", datum: "2026-07-01", foto: FOTO.wijn },
+        { naam: "Broedplaats Noord", tagline: "ramen en vinyl in een oude scheepsloods", cat: "Eten", buurt: "Noord", meta: "€€ · alleen diner", datum: "2026-06-20", foto: FOTO.ramen },
+        { naam: "Zuurdesem & Zonen", tagline: "de bakkerij waar Oost voor omfietst", cat: "Bakkerij", buurt: "Oost", meta: "€ · 08:00–16:00", datum: "2026-06-10", foto: FOTO.croissant },
+        { naam: "Kade Twaalf", tagline: "rooftop-aperitivo met uitzicht over het IJ", cat: "Drinken", buurt: "Noord", meta: "€€€ · reserveren aangeraden", datum: "2026-07-21", foto: FOTO.cocktails },
+        { naam: "Galerie Gracht", tagline: "jonge makers in een oud grachtenpand", cat: "Cultuur", buurt: "Centrum", meta: "gratis · wo t/m zo", datum: "2026-08-05", foto: FOTO.galerie },
+      ],
+    },
+    antwerpen: {
+      naam: "Antwerpen", code: "ANTW", land: "België",
+      hero: FOTO.cafe,
+      intro: "Van het Zuid tot het Eilandje: de nieuwe adressen van de stad aan de Schelde, netjes op openingsdatum.",
+      buurten: [
+        { naam: "Zuid", sub: "Galeries, terrassen en klasse", foto: FOTO.galerie },
+        { naam: "Eilandje", sub: "Havens, lofts en lange avonden", foto: FOTO.straat },
+        { naam: "Borgerhout", sub: "Rauw, jong en verrassend lekker", foto: FOTO.ramen },
+        { naam: "Zurenborg", sub: "Art nouveau en aperitief", foto: FOTO.wijn },
+      ],
+      spots: [
+        { naam: "Koffie Kompas", tagline: "slow bar met branderij op het Zuid", cat: "Koffie", buurt: "Zuid", meta: "€ · vanaf 08:00", datum: "2026-07-05", foto: FOTO.koffie },
+        { naam: "Vin Vin", tagline: "natuurwijn onder de art-nouveaugevels", cat: "Wijn", buurt: "Zurenborg", meta: "€€ · vanaf 17:00", datum: "2026-06-24", foto: FOTO.wijn },
+        { naam: "Atelier Acht", tagline: "Belgisch design en keramiek aan de kade", cat: "Winkels", buurt: "Eilandje", meta: "di t/m za", datum: "2026-06-12", foto: FOTO.winkel },
+        { naam: "Tafel van Tien", tagline: "één lange tafel, één menu, elke avond vol", cat: "Eten", buurt: "Borgerhout", meta: "€€ · alleen diner", datum: "2026-05-20", foto: FOTO.tafel },
+        { naam: "MAS Boven", tagline: "aperitivo met de haven aan je voeten", cat: "Drinken", buurt: "Eilandje", meta: "€€€ · reserveren aangeraden", datum: "2026-07-30", foto: FOTO.cocktails },
+        { naam: "Lichthal", tagline: "lichtkunst in een voormalige pakhuis", cat: "Cultuur", buurt: "Eilandje", meta: "gratis · do t/m zo", datum: "2026-08-09", foto: FOTO.galerie },
+      ],
+    },
+    berlijn: {
+      naam: "Berlijn", code: "BER", land: "Duitsland",
+      hero: FOTO.straat,
+      intro: "Von Kreuzberg bis Prenzlauer Berg: de nieuwe adressen van de stad die nooit af is — op datum, voordat ze vol zitten.",
+      buurten: [
+        { naam: "Kreuzberg", sub: "Canals, kebab en derde golf koffie", foto: FOTO.koffie },
+        { naam: "Neukölln", sub: "Rauw, eigenzinnig, altijd open", foto: FOTO.ramen },
+        { naam: "Mitte", sub: "Galeries en daken met uitzicht", foto: FOTO.galerie },
+        { naam: "Prenzlauer Berg", sub: "Boekhandels en zondagse markten", foto: FOTO.boeken },
+      ],
+      spots: [
+        { naam: "Kaffee Kollektiv", tagline: "branderij en bakkerij aan het kanaal", cat: "Koffie", buurt: "Kreuzberg", meta: "€ · vanaf 08:00", datum: "2026-07-06", foto: FOTO.koffie },
+        { naam: "Ramen Rixdorf", tagline: "handgetrokken noedels in een hinterhof", cat: "Eten", buurt: "Neukölln", meta: "€€ · alleen diner", datum: "2026-06-28", foto: FOTO.ramen },
+        { naam: "Buchbar", tagline: "boekhandel met wijnbar tot middernacht", cat: "Cultuur", buurt: "Prenzlauer Berg", meta: "gratis · dagelijks", datum: "2026-06-05", foto: FOTO.boeken },
+        { naam: "Dach Drei", tagline: "rooftop boven de daken van Mitte", cat: "Drinken", buurt: "Mitte", meta: "€€€ · reserveren aangeraden", datum: "2026-07-22", foto: FOTO.cocktails },
+        { naam: "Galerie Grau", tagline: "jonge kunst in een betonnen hal", cat: "Cultuur", buurt: "Mitte", meta: "gratis · wo t/m zo", datum: "2026-08-12", foto: FOTO.galerie },
+      ],
+    },
+  };
+
+  const WERELD = [
+    { land: "Nederland", steden: [{ key: "breda" }, { key: "amsterdam" }, { naam: "Rotterdam" }, { naam: "Utrecht" }, { naam: "Eindhoven" }, { naam: "Tilburg" }] },
+    { land: "België", steden: [{ key: "antwerpen" }, { naam: "Gent" }, { naam: "Brussel" }] },
+    { land: "Duitsland", steden: [{ key: "berlijn" }, { naam: "Hamburg" }, { naam: "Keulen" }] },
+    { land: "Frankrijk", steden: [{ naam: "Parijs" }, { naam: "Lyon" }] },
+    { land: "Spanje", steden: [{ naam: "Barcelona" }, { naam: "Madrid" }] },
+    { land: "Verenigd Koninkrijk", steden: [{ naam: "Londen" }] },
+    { land: "Italië", steden: [{ naam: "Milaan" }] },
+    { land: "Verenigde Staten", steden: [{ naam: "New York" }] },
+    { land: "Japan", steden: [{ naam: "Tokio" }] },
   ];
 
   const MAANDEN = ["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
   const vandaag = new Date(); vandaag.setHours(0,0,0,0);
-  const dvan = s => { const d = new Date(s + "T00:00:00"); return d; };
+  const dvan = s => new Date(s + "T00:00:00");
   const fmt = s => { const d = dvan(s); return d.getDate() + " " + MAANDEN[d.getMonth()]; };
   const relatief = s => {
     const dagen = Math.round((dvan(s) - vandaag) / 864e5);
@@ -393,53 +519,114 @@
     return "over " + dagen + " dagen";
   };
   const esc = t => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const foto = (f, extra) => `<img src="${f.src}" alt="${esc(f.alt)}" loading="lazy">${extra || ""}`;
 
-  const komend  = SPOTS.filter(s => dvan(s.datum) >  vandaag).sort((a,b) => a.datum.localeCompare(b.datum));
-  const geopend = SPOTS.filter(s => dvan(s.datum) <= vandaag).sort((a,b) => b.datum.localeCompare(a.datum));
+  let huidig = "breda";
 
-  document.getElementById('agenda-list').innerHTML = komend.map(s => {
-    const d = dvan(s.datum);
-    return `<a class="agenda-row reveal" href="#">
-      <div class="a-date"><b>${d.getDate()}</b><span class="m">${MAANDEN[d.getMonth()]}</span><span class="in">${relatief(s.datum)}</span></div>
-      <div class="a-body">
+  function renderStad(key) {
+    huidig = key;
+    const stad = STEDEN[key];
+    const komend  = stad.spots.filter(s => dvan(s.datum) >  vandaag).sort((a,b) => a.datum.localeCompare(b.datum));
+    const geopend = stad.spots.filter(s => dvan(s.datum) <= vandaag).sort((a,b) => b.datum.localeCompare(a.datum));
+
+    document.title = stad.code + " — Nieuwe hotspots in " + stad.naam;
+    document.documentElement.style.setProperty('--wm', JSON.stringify(stad.code));
+    document.getElementById('logo').textContent = stad.code;
+    document.getElementById('logo-footer').textContent = stad.code;
+    document.getElementById('city-pick-label').textContent = stad.naam;
+    document.getElementById('stat-spots').textContent = stad.spots.length;
+
+    document.getElementById('feature-photo').innerHTML = foto(stad.hero);
+    document.getElementById('feature-photo').classList.remove('noimg');
+    document.getElementById('feature-cat').innerHTML = `De openingskalender <span class="sep">—</span> ${esc(stad.naam)}`;
+    document.getElementById('feature-title').innerHTML = `<b>${esc(stad.naam)} ontwaakt</b> — <em>wat er net open is en wat er deze zomer aankomt</em>`;
+    document.getElementById('feature-excerpt').textContent = stad.intro;
+
+    document.getElementById('quote-stad').textContent = stad.naam;
+    document.getElementById('quote-who').textContent = stad.code + " — het zomernummer";
+
+    document.getElementById('side-grid').innerHTML = geopend.slice(0, 4).map(s => `
+      <a class="story reveal" href="#netgeopend">
+        <div class="photo">${foto(s.foto)}</div>
+        <div class="cat">${esc(s.cat)} <span class="sep">—</span> ${fmt(s.datum)}</div>
+        <h3><b>${esc(s.naam)}</b> — <em>${esc(s.tagline)}</em></h3>
+        <div class="byline">${esc(s.buurt)}</div>
+      </a>`).join("");
+
+    document.getElementById('agenda-list').innerHTML = komend.length ? komend.map(s => {
+      const d = dvan(s.datum);
+      return `<a class="agenda-row reveal" href="#">
+        <div class="a-date"><b>${d.getDate()}</b><span class="m">${MAANDEN[d.getMonth()]}</span><span class="in">${relatief(s.datum)}</span></div>
+        <div class="a-body">
+          <div class="cat">${esc(s.cat)} <span class="sep">·</span> ${esc(s.buurt)}</div>
+          <h3><b>${esc(s.naam)}</b> — <em>${esc(s.tagline)}</em></h3>
+          <div class="byline">${esc(s.meta)}</div>
+        </div>
+        <div class="a-thumb photo">${foto(s.foto)}</div>
+      </a>`;
+    }).join("") : `<p style="color:var(--grey)">Nog geen aangekondigde openingen in ${esc(stad.naam)} — tips zijn welkom.</p>`;
+
+    document.getElementById('opened-grid').innerHTML = geopend.map(s => `
+      <a class="story reveal" href="#">
+        <div class="photo">${foto(s.foto, `<span class="date-flag">Geopend ${fmt(s.datum)}</span>`)}</div>
         <div class="cat">${esc(s.cat)} <span class="sep">·</span> ${esc(s.buurt)}</div>
         <h3><b>${esc(s.naam)}</b> — <em>${esc(s.tagline)}</em></h3>
         <div class="byline">${esc(s.meta)}</div>
-      </div>
-      <div class="a-thumb photo"><img src="${s.img}" alt="${esc(s.alt)}" loading="lazy"></div>
-    </a>`;
-  }).join("");
+      </a>`).join("");
 
-  document.getElementById('opened-grid').innerHTML = geopend.map(s => `
-    <a class="story reveal" href="#">
-      <div class="photo"><img src="${s.img}" alt="${esc(s.alt)}" loading="lazy"><span class="date-flag">Geopend ${fmt(s.datum)}</span></div>
-      <div class="cat">${esc(s.cat)} <span class="sep">·</span> ${esc(s.buurt)}</div>
-      <h3><b>${esc(s.naam)}</b> — <em>${esc(s.tagline)}</em></h3>
-      <div class="byline">${esc(s.meta)}</div>
-    </a>`).join("");
+    document.getElementById('hood-grid').innerHTML = stad.buurten.map(b => {
+      const n = stad.spots.filter(s => s.buurt === b.naam).length;
+      return `<a class="hood reveal" href="#netgeopend">
+        <div class="photo">${foto(b.foto)}</div>
+        <div class="hood-body"><h3>${esc(b.naam)}</h3><p>${esc(b.sub)}</p><span class="n">${n ? n + (n === 1 ? " nieuwe spot" : " nieuwe spots") : "in de gaten gehouden"}</span></div>
+      </a>`;
+    }).join("");
 
-  // Hero-zijkolom: de vier meest recente openingen
-  document.getElementById('side-grid').innerHTML = geopend.slice(0, 4).map(s => `
-    <a class="story reveal" href="#netgeopend">
-      <div class="photo"><img src="${s.img}" alt="${esc(s.alt)}" loading="lazy"></div>
-      <div class="cat">${esc(s.cat)} <span class="sep">—</span> ${fmt(s.datum)}</div>
-      <h3><b>${esc(s.naam)}</b> — <em>${esc(s.tagline)}</em></h3>
-      <div class="byline">${esc(s.buurt)}</div>
-    </a>`).join("");
+    renderWereld();
+    activeer();
+  }
 
-  // Scroll reveal
+  function renderWereld() {
+    document.getElementById('world-grid').innerHTML = WERELD.map(groep => `
+      <div class="land reveal">
+        <h3>${esc(groep.land)}</h3>
+        <ul>${groep.steden.map(s => {
+          if (s.key) {
+            const stad = STEDEN[s.key];
+            const hier = s.key === huidig;
+            return `<li><a href="#" data-city="${s.key}" class="${hier ? "actief" : ""}">
+              <span class="cnaam">${esc(stad.naam)}</span>
+              <span class="n">${hier ? "je bent hier" : stad.spots.length + " spots"}</span></a></li>`;
+          }
+          return `<li><span class="soon"><span class="cnaam">${esc(s.naam)}</span><span class="n">binnenkort</span></span></li>`;
+        }).join("")}</ul>
+      </div>`).join("");
+  }
+
+  function activeer() {
+    // scroll-reveal en foto-fallback voor (opnieuw) gerenderde elementen
+    document.querySelectorAll('.reveal:not(.in)').forEach(el => io.observe(el));
+    document.querySelectorAll('.photo img').forEach(img => {
+      const fail = () => { img.closest('.photo').classList.add('noimg'); img.remove(); };
+      if (img.complete && img.naturalWidth === 0) fail();
+      else img.addEventListener('error', fail);
+    });
+  }
+
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
     });
   }, { threshold: 0.08 });
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  // Foto-fallback: toon een nette duotone-tegel als een afbeelding niet laadt
-  document.querySelectorAll('.photo img').forEach(img => {
-    const fail = () => { img.closest('.photo').classList.add('noimg'); img.remove(); };
-    if (img.complete && img.naturalWidth === 0) fail();
-    else img.addEventListener('error', fail);
+  document.getElementById('world-grid').addEventListener('click', e => {
+    const link = e.target.closest('a[data-city]');
+    if (!link) return;
+    e.preventDefault();
+    if (link.dataset.city === huidig) return;
+    renderStad(link.dataset.city);
+    history.replaceState(null, "", "#stad=" + link.dataset.city);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
   // Nieuwsbrief (alleen front-end)
@@ -450,6 +637,11 @@
     e.target.reset();
     return false;
   }
+
+  // Start: stad uit de URL-hash of Breda
+  const gevraagd = (location.hash.match(/stad=([a-z]+)/) || [])[1];
+  renderStad(STEDEN[gevraagd] ? gevraagd : "breda");
+
 </script>
 
 </body>
