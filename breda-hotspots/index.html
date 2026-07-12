@@ -141,24 +141,52 @@
   .story h3 em { font-family: var(--serif); font-style: normal; }
   .story .byline { margin-top: 12px; }
 
-  /* ---------- filters ---------- */
-  .filters { display: flex; gap: 30px; flex-wrap: wrap; margin-bottom: 44px; }
-  .chip {
-    background: none; border: none; cursor: pointer; padding: 2px 0;
-    font-family: var(--sans); font-size: .72rem; font-weight: 600;
-    letter-spacing: .2em; text-transform: uppercase; color: var(--grey);
-    border-bottom: 1px solid transparent; transition: color .2s;
+  /* ---------- agenda (binnenkort open) ---------- */
+  .agenda { padding: 0 0 90px; }
+  .agenda-row {
+    display: grid; grid-template-columns: 150px 1fr 180px;
+    gap: 36px; align-items: center;
+    padding: 34px 0; border-top: 1px solid var(--line);
+    text-decoration: none;
   }
-  .chip:hover { color: var(--ink); }
-  .chip.active { color: var(--ink); border-bottom-color: var(--ink); }
+  .agenda-row:last-child { border-bottom: 1px solid var(--line); }
+  @media (max-width: 720px) {
+    .agenda-row { grid-template-columns: 90px 1fr; }
+    .agenda-row .a-thumb { display: none; }
+  }
+  .a-date { text-align: center; }
+  .a-date b {
+    display: block; font-family: var(--serif); font-weight: 500;
+    font-size: 3.2rem; line-height: 1; letter-spacing: -.02em;
+  }
+  .a-date .m {
+    display: block; margin-top: 6px; font-size: .68rem; font-weight: 600;
+    letter-spacing: .3em; text-transform: uppercase;
+  }
+  .a-date .in {
+    display: block; margin-top: 8px; font-size: .64rem; font-weight: 500;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--grey);
+  }
+  .a-body h3 { font-weight: 400; font-size: 1.5rem; line-height: 1.25; margin-top: 8px; }
+  .a-body h3 b { font-family: var(--sans); font-weight: 700; }
+  .a-body h3 em { font-family: var(--serif); font-style: normal; }
+  .a-body .byline { margin-top: 10px; }
+  .a-thumb { aspect-ratio: 1/1; overflow: hidden; }
+  .agenda-row:hover .a-thumb img { transform: scale(1.05); }
+  .agenda-row:hover h3 { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
 
-  /* ---------- spots grid ---------- */
+  /* ---------- spots grid (net geopend) ---------- */
   .spots { padding: 0 0 90px; }
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px 28px; }
   @media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
-  .story.hidden { display: none; }
   .grid .photo { aspect-ratio: 4/3; }
+  .date-flag {
+    position: absolute; left: 0; bottom: 0; z-index: 2;
+    background: var(--bg); color: var(--ink);
+    font-size: .64rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+    padding: 8px 14px;
+  }
 
   /* ---------- quote band ---------- */
   .quote { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 80px 0; text-align: center; }
@@ -242,8 +270,8 @@
     <div class="burger" aria-hidden="true"><span></span><span></span><span></span></div>
     <a class="logo" href="#">BRDA</a>
     <div class="nav-right">
-      <a href="#hotspots">Hotspots</a>
-      <a href="#buurten">Buurten</a>
+      <a href="#binnenkort">Binnenkort</a>
+      <a href="#netgeopend">Net geopend</a>
       <a href="#nieuwsbrief">Nieuwsbrief</a>
     </div>
   </div>
@@ -253,101 +281,31 @@
   <div class="wrap">
     <div class="hero-grid">
 
-      <a class="feature reveal" href="#hotspots">
+      <a class="feature reveal" href="#binnenkort">
         <div class="photo"><img src="https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?w=1200&q=80" alt="Grachtenpanden en water in de binnenstad"></div>
-        <div class="cat">Stadsgids <span class="sep">—</span> Zomer 2026</div>
-        <h1><b>Breda ontwaakt</b> — <em>de 24 nieuwe adressen die je deze zomer wilt kennen</em></h1>
-        <p class="excerpt">Van natuurwijn achter een naamloze groene deur tot slow coffee op de Ginnekenweg: dit zijn de openingen waar de stad over praat — voordat iedereen ze kent.</p>
-        <div class="byline">Door BRDA redactie <span>· 12 juli 2026</span></div>
+        <div class="cat">De openingskalender <span class="sep">—</span> Zomer 2026</div>
+        <h1><b>Breda ontwaakt</b> — <em>wat er net open is en wat er deze zomer aankomt</em></h1>
+        <p class="excerpt">Van natuurwijn achter een naamloze groene deur tot een dakterras boven de Grote Kerk: elke opening op datum — zodat je er eerder bent dan de rest.</p>
+        <div class="byline">Door BRDA redactie <span>· wekelijks bijgewerkt</span></div>
       </a>
 
-      <div class="side-grid">
-        <a class="story reveal" href="#hotspots">
-          <div class="photo"><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=80" alt="Koffie met latte art"></div>
-          <div class="cat">Koffie</div>
-          <h3><b>Ronde Bonen</b> — <em>twaalf stoelen, één branderij, nul compromissen</em></h3>
-          <div class="byline">Ginnekenweg</div>
-        </a>
-        <a class="story reveal" href="#hotspots">
-          <div class="photo"><img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=700&q=80" alt="Glazen natuurwijn"></div>
-          <div class="cat">Wijn</div>
-          <h3><b>Bar Barrière</b> — <em>vijftig natuurwijnen achter een groene deur</em></h3>
-          <div class="byline">Haagdijk</div>
-        </a>
-        <a class="story reveal" href="#hotspots">
-          <div class="photo"><img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=700&q=80" alt="Verse croissants"></div>
-          <div class="cat">Bakkerij</div>
-          <h3><b>Boterham &amp; Zo</b> — <em>de croissant die om 11:30 uitverkocht is</em></h3>
-          <div class="byline">Centrum</div>
-        </a>
-        <a class="story reveal" href="#hotspots">
-          <div class="photo"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=700&q=80" alt="Vriendinnen samen in de stad"></div>
-          <div class="cat">Uit eten</div>
-          <h3><b>Lange tafels</b> — <em>waar Breda deze zomer samen eet</em></h3>
-          <div class="byline">Belcrum</div>
-        </a>
-      </div>
+      <div class="side-grid" id="side-grid"></div>
 
     </div>
   </div>
 </header>
 
-<section class="spots" id="hotspots">
+<section class="agenda" id="binnenkort">
   <div class="wrap">
-    <div class="sec-title reveal"><h2>Nieuwe hotspots</h2></div>
+    <div class="sec-title reveal"><h2>Binnenkort open</h2></div>
+    <div id="agenda-list"></div>
+  </div>
+</section>
 
-    <div class="filters reveal" role="group" aria-label="Filter hotspots op categorie">
-      <button class="chip active" data-filter="all">Alles</button>
-      <button class="chip" data-filter="koffie">Koffie</button>
-      <button class="chip" data-filter="eten">Eten</button>
-      <button class="chip" data-filter="drinken">Drinken</button>
-      <button class="chip" data-filter="cultuur">Cultuur</button>
-      <button class="chip" data-filter="winkels">Winkels</button>
-    </div>
-
-    <div class="grid">
-      <a class="story reveal" data-cat="eten" href="#">
-        <div class="photo"><img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80" alt="Ramen met ei en lente-ui"></div>
-        <div class="cat">Eten <span class="sep">·</span> Belcrum</div>
-        <h3><b>Noedelbar Noord</b> — <em>handgetrokken noedels in een oude loods</em></h3>
-        <div class="byline">€€ <span>· alleen diner</span></div>
-      </a>
-
-      <a class="story reveal" data-cat="koffie" href="#">
-        <div class="photo"><img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80" alt="Licht café-interieur"></div>
-        <div class="cat">Koffie <span class="sep">·</span> Ginnekenweg</div>
-        <h3><b>Ronde Bonen</b> — <em>slow coffee en kardemombroodjes</em></h3>
-        <div class="byline">€ <span>· vanaf 08:00</span></div>
-      </a>
-
-      <a class="story reveal" data-cat="drinken" href="#">
-        <div class="photo"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&q=80" alt="Cocktails bij golden hour"></div>
-        <div class="cat">Drinken <span class="sep">·</span> Centrum</div>
-        <h3><b>Dakterras DK9</b> — <em>aperitivo met de Grote Kerk op ooghoogte</em></h3>
-        <div class="byline">€€€ <span>· april t/m oktober</span></div>
-      </a>
-
-      <a class="story reveal" data-cat="cultuur" href="#">
-        <div class="photo"><img src="https://images.unsplash.com/photo-1531058020387-3be344556be6?w=800&q=80" alt="Lichtinstallatie tijdens een avondexpositie"></div>
-        <div class="cat">Cultuur <span class="sep">·</span> Havenkwartier</div>
-        <h3><b>Loods Lumen</b> — <em>lichtkunst en open studio's aan het water</em></h3>
-        <div class="byline">Gratis <span>· do t/m zo</span></div>
-      </a>
-
-      <a class="story reveal" data-cat="winkels" href="#">
-        <div class="photo"><img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80" alt="Minimalistische conceptstore"></div>
-        <div class="cat">Winkels <span class="sep">·</span> Ginneken</div>
-        <h3><b>Studio Stof</b> — <em>Dutch design, droogbloemen en keramiek</em></h3>
-        <div class="byline">di t/m za</div>
-      </a>
-
-      <a class="story reveal" data-cat="cultuur" href="#">
-        <div class="photo"><img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&q=80" alt="Boekenkasten tot aan het plafond"></div>
-        <div class="cat">Cultuur <span class="sep">·</span> Belcrum</div>
-        <h3><b>De Leeszaal</b> — <em>boekhandel, leescafé en klein podium ineen</em></h3>
-        <div class="byline">Gratis <span>· dagelijks</span></div>
-      </a>
-    </div>
+<section class="spots" id="netgeopend">
+  <div class="wrap">
+    <div class="sec-title reveal"><h2>Net geopend</h2></div>
+    <div class="grid" id="opened-grid"></div>
   </div>
 </section>
 
@@ -362,19 +320,19 @@
   <div class="wrap">
     <div class="sec-title reveal"><h2>De buurten</h2></div>
     <div class="hood-grid">
-      <a class="hood reveal" href="#hotspots">
+      <a class="hood reveal" href="#netgeopend">
         <div class="photo"><img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=700&q=80" alt="Europese straat met karakter"></div>
         <div class="hood-body"><h3>Belcrum</h3><p>Loodsen, brouwerijen, studio's</p><span class="n">7 nieuwe spots</span></div>
       </a>
-      <a class="hood reveal" href="#hotspots">
+      <a class="hood reveal" href="#netgeopend">
         <div class="photo"><img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=700&q=80" alt="Caféterras in de ochtend"></div>
         <div class="hood-body"><h3>Haagdijk</h3><p>De straat die iedereen straks kent</p><span class="n">6 nieuwe spots</span></div>
       </a>
-      <a class="hood reveal" href="#hotspots">
+      <a class="hood reveal" href="#netgeopend">
         <div class="photo"><img src="https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?w=700&q=80" alt="Historische binnenstad aan het water"></div>
         <div class="hood-body"><h3>Centrum</h3><p>De klassiekers, opnieuw uitgevonden</p><span class="n">6 nieuwe spots</span></div>
       </a>
-      <a class="hood reveal" href="#hotspots">
+      <a class="hood reveal" href="#netgeopend">
         <div class="photo"><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=80" alt="Koffiemoment op een rustige ochtend"></div>
         <div class="hood-body"><h3>Ginneken</h3><p>Dorps, groen en verrassend goed</p><span class="n">5 nieuwe spots</span></div>
       </a>
@@ -399,7 +357,7 @@
   <div class="wrap">
     <a class="logo" href="#">BRDA</a>
     <div class="links">
-      <a href="#hotspots">Hotspots</a>
+      <a href="#binnenkort">Binnenkort</a>
       <a href="#buurten">Buurten</a>
       <a href="#nieuwsbrief">Nieuwsbrief</a>
     </div>
@@ -408,19 +366,66 @@
 </footer>
 
 <script>
-  // Categorie-filter
-  const chips = document.querySelectorAll('.chip');
-  const cards = document.querySelectorAll('.grid .story');
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      chips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      const f = chip.dataset.filter;
-      cards.forEach(card => {
-        card.classList.toggle('hidden', f !== 'all' && card.dataset.cat !== f);
-      });
-    });
-  });
+  // ---- Spots: één lijst, gesorteerd op openingsdatum ----
+  // Alles met een datum in de toekomst komt onder "Binnenkort open",
+  // de rest (nieuwste eerst) onder "Net geopend".
+  const SPOTS = [
+    { naam: "Ronde Bonen", tagline: "twaalf stoelen, één branderij, nul compromissen", cat: "Koffie", buurt: "Ginnekenweg", meta: "€ · vanaf 08:00", datum: "2026-07-10", img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80", alt: "Koffie met latte art" },
+    { naam: "Bar Barrière", tagline: "vijftig natuurwijnen achter een groene deur", cat: "Wijn", buurt: "Haagdijk", meta: "€€ · vanaf 17:00", datum: "2026-07-03", img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&q=80", alt: "Glazen natuurwijn" },
+    { naam: "Noedelbar Noord", tagline: "handgetrokken noedels in een oude loods", cat: "Eten", buurt: "Belcrum", meta: "€€ · alleen diner", datum: "2026-06-26", img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80", alt: "Ramen met ei en lente-ui" },
+    { naam: "Boterham & Zo", tagline: "de croissant die om 11:30 uitverkocht is", cat: "Bakkerij", buurt: "Centrum", meta: "€ · 08:00–16:00", datum: "2026-06-18", img: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800&q=80", alt: "Verse croissants" },
+    { naam: "Studio Stof", tagline: "Dutch design, droogbloemen en keramiek", cat: "Winkels", buurt: "Ginneken", meta: "di t/m za", datum: "2026-05-29", img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80", alt: "Minimalistische conceptstore" },
+    { naam: "Café Vroeg", tagline: "licht, ruim en de hele dag ontbijt", cat: "Koffie", buurt: "Centrum", meta: "€ · 08:00–17:00", datum: "2026-05-15", img: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80", alt: "Licht café-interieur" },
+    { naam: "Dakterras DK9", tagline: "aperitivo met de Grote Kerk op ooghoogte", cat: "Drinken", buurt: "Centrum", meta: "€€€ · reserveren aangeraden", datum: "2026-07-18", img: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&q=80", alt: "Cocktails bij golden hour" },
+    { naam: "Loods Lumen", tagline: "lichtkunst en open studio's aan het water", cat: "Cultuur", buurt: "Havenkwartier", meta: "gratis · do t/m zo", datum: "2026-07-25", img: "https://images.unsplash.com/photo-1531058020387-3be344556be6?w=800&q=80", alt: "Lichtinstallatie tijdens een avondexpositie" },
+    { naam: "De Leeszaal", tagline: "boekhandel, leescafé en klein podium ineen", cat: "Cultuur", buurt: "Belcrum", meta: "gratis · dagelijks", datum: "2026-08-02", img: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&q=80", alt: "Boekenkasten tot aan het plafond" },
+    { naam: "Lange Tafels", tagline: "één avond, één straat, samen eten in Belcrum", cat: "Eten", buurt: "Belcrum", meta: "€€ · eenmalig zomerdiner", datum: "2026-08-15", img: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80", alt: "Samen aan tafel in de stad" },
+  ];
+
+  const MAANDEN = ["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
+  const vandaag = new Date(); vandaag.setHours(0,0,0,0);
+  const dvan = s => { const d = new Date(s + "T00:00:00"); return d; };
+  const fmt = s => { const d = dvan(s); return d.getDate() + " " + MAANDEN[d.getMonth()]; };
+  const relatief = s => {
+    const dagen = Math.round((dvan(s) - vandaag) / 864e5);
+    if (dagen === 0) return "vandaag";
+    if (dagen === 1) return "morgen";
+    return "over " + dagen + " dagen";
+  };
+  const esc = t => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+  const komend  = SPOTS.filter(s => dvan(s.datum) >  vandaag).sort((a,b) => a.datum.localeCompare(b.datum));
+  const geopend = SPOTS.filter(s => dvan(s.datum) <= vandaag).sort((a,b) => b.datum.localeCompare(a.datum));
+
+  document.getElementById('agenda-list').innerHTML = komend.map(s => {
+    const d = dvan(s.datum);
+    return `<a class="agenda-row reveal" href="#">
+      <div class="a-date"><b>${d.getDate()}</b><span class="m">${MAANDEN[d.getMonth()]}</span><span class="in">${relatief(s.datum)}</span></div>
+      <div class="a-body">
+        <div class="cat">${esc(s.cat)} <span class="sep">·</span> ${esc(s.buurt)}</div>
+        <h3><b>${esc(s.naam)}</b> — <em>${esc(s.tagline)}</em></h3>
+        <div class="byline">${esc(s.meta)}</div>
+      </div>
+      <div class="a-thumb photo"><img src="${s.img}" alt="${esc(s.alt)}" loading="lazy"></div>
+    </a>`;
+  }).join("");
+
+  document.getElementById('opened-grid').innerHTML = geopend.map(s => `
+    <a class="story reveal" href="#">
+      <div class="photo"><img src="${s.img}" alt="${esc(s.alt)}" loading="lazy"><span class="date-flag">Geopend ${fmt(s.datum)}</span></div>
+      <div class="cat">${esc(s.cat)} <span class="sep">·</span> ${esc(s.buurt)}</div>
+      <h3><b>${esc(s.naam)}</b> — <em>${esc(s.tagline)}</em></h3>
+      <div class="byline">${esc(s.meta)}</div>
+    </a>`).join("");
+
+  // Hero-zijkolom: de vier meest recente openingen
+  document.getElementById('side-grid').innerHTML = geopend.slice(0, 4).map(s => `
+    <a class="story reveal" href="#netgeopend">
+      <div class="photo"><img src="${s.img}" alt="${esc(s.alt)}" loading="lazy"></div>
+      <div class="cat">${esc(s.cat)} <span class="sep">—</span> ${fmt(s.datum)}</div>
+      <h3><b>${esc(s.naam)}</b> — <em>${esc(s.tagline)}</em></h3>
+      <div class="byline">${esc(s.buurt)}</div>
+    </a>`).join("");
 
   // Scroll reveal
   const io = new IntersectionObserver(entries => {
