@@ -4,317 +4,359 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BRDA — New Hotspots in Breda</title>
-<meta name="description" content="A curated guide to the newest cafés, restaurants, bars and creative spots in Breda.">
+<meta name="description" content="The loudest guide to the newest cafés, restaurants, bars and creative spots in Breda.">
 <style>
   :root {
-    --bg: #faf6f0;
-    --ink: #1c1a17;
-    --ink-soft: #5c564d;
-    --accent: #e4572e;
-    --accent-soft: #ffe8de;
-    --card: #ffffff;
-    --line: #e8e0d4;
-    --radius: 20px;
-    --font-display: "Georgia", "Times New Roman", serif;
-    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --bg: #0b0b10;
+    --ink: #f4f1ea;
+    --muted: #9a94a6;
+    --hot: #ff3d00;
+    --pink: #ff2e88;
+    --lime: #c8ff2e;
+    --cyan: #2ee6ff;
+    --purple: #8b3dff;
+    --card: #14131c;
+    --line: #2a2836;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
+  ::selection { background: var(--lime); color: #000; }
 
   body {
     background: var(--bg);
     color: var(--ink);
-    font-family: var(--font-body);
-    line-height: 1.6;
+    font-family: var(--font);
+    line-height: 1.5;
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
 
-  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
-  /* ---------- Nav ---------- */
+  /* ---------- animated blobs ---------- */
+  .blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; filter: blur(90px); opacity: .5; }
+  .blob { position: absolute; border-radius: 50%; }
+  .b1 { width: 520px; height: 520px; background: var(--purple); top: -140px; left: -120px; animation: drift1 18s ease-in-out infinite alternate; }
+  .b2 { width: 420px; height: 420px; background: var(--pink); top: 30%; right: -140px; animation: drift2 22s ease-in-out infinite alternate; }
+  .b3 { width: 380px; height: 380px; background: var(--hot); bottom: -120px; left: 30%; animation: drift3 26s ease-in-out infinite alternate; }
+  @keyframes drift1 { to { transform: translate(120px, 160px) scale(1.15); } }
+  @keyframes drift2 { to { transform: translate(-160px, -120px) scale(0.9); } }
+  @keyframes drift3 { to { transform: translate(-100px, -140px) scale(1.2); } }
+
+  main { position: relative; z-index: 1; }
+
+  /* ---------- nav ---------- */
   nav {
     position: sticky; top: 0; z-index: 50;
-    background: rgba(250, 246, 240, 0.85);
-    backdrop-filter: blur(12px);
+    background: rgba(11,11,16,.7);
+    backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--line);
   }
   .nav-inner {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 24px; max-width: 1160px; margin: 0 auto;
+    padding: 16px 24px; max-width: 1200px; margin: 0 auto;
   }
   .logo {
-    font-family: var(--font-display);
-    font-size: 1.5rem; font-weight: 700; letter-spacing: 0.05em;
+    font-weight: 900; font-size: 1.4rem; letter-spacing: -0.03em;
     text-decoration: none; color: var(--ink);
   }
-  .logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 28px; }
+  .logo i { font-style: normal; color: var(--lime); }
+  .nav-links { display: flex; gap: 26px; align-items: center; }
   .nav-links a {
-    text-decoration: none; color: var(--ink-soft);
-    font-size: 0.9rem; font-weight: 500; letter-spacing: 0.02em;
-    transition: color 0.2s;
+    text-decoration: none; color: var(--muted);
+    font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+    transition: color .2s;
   }
-  .nav-links a:hover { color: var(--accent); }
-  @media (max-width: 640px) { .nav-links { display: none; } }
+  .nav-links a:hover { color: var(--lime); }
+  .nav-cta {
+    background: var(--lime); color: #000 !important;
+    padding: 9px 18px; border-radius: 999px;
+  }
+  .nav-cta:hover { background: var(--ink); }
+  @media (max-width: 680px) { .nav-links a:not(.nav-cta) { display: none; } }
 
-  /* ---------- Hero ---------- */
-  header {
-    padding: 96px 0 72px;
-    position: relative;
-    overflow: hidden;
-  }
-  header::before {
-    content: "";
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(600px 400px at 85% 10%, var(--accent-soft), transparent 70%),
-      radial-gradient(500px 350px at 5% 90%, #e8f0e4, transparent 70%);
-    pointer-events: none;
-  }
+  /* ---------- hero ---------- */
+  header { padding: 90px 0 60px; position: relative; }
   .kicker {
-    display: inline-block;
-    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--accent);
-    background: var(--accent-soft);
-    padding: 8px 16px; border-radius: 999px;
-    margin-bottom: 24px;
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: .78rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--lime); border: 1px solid var(--lime);
+    padding: 8px 18px; border-radius: 999px; margin-bottom: 30px;
   }
+  .kicker .pulse {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--lime);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { opacity: .2; transform: scale(.7); } }
+
   h1 {
-    font-family: var(--font-display);
-    font-size: clamp(2.6rem, 6.5vw, 4.8rem);
-    line-height: 1.05; font-weight: 700;
-    max-width: 14ch;
-    margin-bottom: 24px;
+    font-size: clamp(3.2rem, 11vw, 8.5rem);
+    line-height: .92; font-weight: 900; letter-spacing: -0.04em;
+    text-transform: uppercase;
   }
-  h1 em { font-style: italic; color: var(--accent); }
+  h1 .fill {
+    background: linear-gradient(90deg, var(--hot), var(--pink), var(--purple));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  h1 .stroke {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--ink);
+  }
+  h1 .tilt {
+    display: inline-block;
+    background: var(--lime); color: #000;
+    padding: 0 .18em; transform: rotate(-2.5deg);
+    border-radius: .08em;
+  }
+
   .lede {
-    font-size: 1.15rem; color: var(--ink-soft);
-    max-width: 52ch; margin-bottom: 40px;
+    font-size: 1.15rem; color: var(--muted);
+    max-width: 50ch; margin: 34px 0 40px;
   }
-  .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+  .lede b { color: var(--ink); }
+
+  .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
   .btn {
     display: inline-block; text-decoration: none;
-    padding: 14px 30px; border-radius: 999px;
-    font-weight: 600; font-size: 0.95rem;
-    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 16px 34px; border-radius: 999px;
+    font-weight: 800; font-size: .95rem; text-transform: uppercase; letter-spacing: .06em;
+    transition: transform .15s, box-shadow .15s;
   }
-  .btn-primary {
-    background: var(--ink); color: var(--bg);
+  .btn-hot {
+    background: linear-gradient(90deg, var(--hot), var(--pink));
+    color: #fff;
   }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(28,26,23,0.25); }
-  .btn-ghost {
-    color: var(--ink); border: 1.5px solid var(--ink);
-  }
-  .btn-ghost:hover { background: var(--ink); color: var(--bg); }
+  .btn-hot:hover { transform: translateY(-3px) rotate(-1deg); box-shadow: 0 14px 40px rgba(255,46,136,.45); }
+  .btn-line { color: var(--ink); border: 2px solid var(--ink); }
+  .btn-line:hover { background: var(--ink); color: #000; transform: translateY(-3px) rotate(1deg); }
 
-  .hero-stats {
-    display: flex; gap: 48px; margin-top: 64px; flex-wrap: wrap;
-    position: relative;
+  /* ---------- marquee ---------- */
+  .marquee {
+    margin-top: 80px;
+    border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink);
+    background: var(--lime); color: #000;
+    overflow: hidden; white-space: nowrap; padding: 14px 0;
+    transform: rotate(-1.2deg) scale(1.02);
   }
-  .stat b { font-family: var(--font-display); font-size: 2rem; display: block; }
-  .stat span { font-size: 0.85rem; color: var(--ink-soft); }
+  .marquee-track {
+    display: inline-block; animation: scroll 22s linear infinite;
+    font-weight: 900; font-size: 1.05rem; text-transform: uppercase; letter-spacing: .1em;
+  }
+  .marquee-track span { margin: 0 22px; }
+  @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-  /* ---------- Ticker ---------- */
-  .ticker {
-    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-    background: var(--ink); color: var(--bg);
-    overflow: hidden; white-space: nowrap; padding: 12px 0;
+  /* ---------- sections ---------- */
+  section { padding: 100px 0; }
+  .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 50px; }
+  h2 {
+    font-size: clamp(2.2rem, 5.5vw, 4rem);
+    font-weight: 900; letter-spacing: -0.03em; text-transform: uppercase; line-height: 1;
   }
-  .ticker-track {
-    display: inline-block;
-    animation: scroll 30s linear infinite;
-    font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase;
-  }
-  .ticker-track span { margin: 0 28px; opacity: 0.85; }
-  .ticker-track .dot { color: var(--accent); }
-  @keyframes scroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
+  h2 em { font-style: normal; color: transparent; -webkit-text-stroke: 1.5px var(--ink); }
+  .section-head p { color: var(--muted); max-width: 44ch; }
 
-  /* ---------- Sections ---------- */
-  section { padding: 88px 0; }
-  .section-head { margin-bottom: 48px; }
-  .section-head h2 {
-    font-family: var(--font-display);
-    font-size: clamp(1.9rem, 4vw, 2.8rem); font-weight: 700;
-  }
-  .section-head p { color: var(--ink-soft); margin-top: 8px; max-width: 60ch; }
-
-  /* ---------- Filters ---------- */
-  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 40px; }
+  /* ---------- filters ---------- */
+  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 46px; }
   .chip {
-    border: 1.5px solid var(--line); background: var(--card);
-    padding: 9px 20px; border-radius: 999px;
-    font-size: 0.88rem; font-weight: 600; cursor: pointer;
-    color: var(--ink-soft); font-family: inherit;
-    transition: all 0.2s;
+    border: 2px solid var(--line); background: transparent;
+    padding: 10px 22px; border-radius: 999px;
+    font-size: .85rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em;
+    cursor: pointer; color: var(--muted); font-family: inherit;
+    transition: all .15s;
   }
-  .chip:hover { border-color: var(--ink); color: var(--ink); }
-  .chip.active { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .chip:hover { border-color: var(--ink); color: var(--ink); transform: rotate(-1.5deg); }
+  .chip.active { background: var(--lime); border-color: var(--lime); color: #000; transform: rotate(-1.5deg); }
 
-  /* ---------- Cards ---------- */
-  .grid {
-    display: grid; gap: 28px;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  }
+  /* ---------- cards ---------- */
+  .grid { display: grid; gap: 26px; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); }
   .card {
     background: var(--card);
-    border-radius: var(--radius);
-    overflow: hidden;
     border: 1px solid var(--line);
-    transition: transform 0.25s, box-shadow 0.25s;
+    border-radius: 22px;
+    overflow: hidden;
     display: flex; flex-direction: column;
+    transition: transform .2s, box-shadow .2s, border-color .2s;
   }
-  .card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(28,26,23,0.12); }
+  .card:nth-child(odd)  { transform: rotate(-.6deg); }
+  .card:nth-child(even) { transform: rotate(.6deg); }
+  .card:hover {
+    transform: rotate(0) translateY(-8px) scale(1.02);
+    border-color: var(--accent, var(--lime));
+    box-shadow: 0 24px 60px rgba(0,0,0,.55), 0 0 0 1px var(--accent, var(--lime));
+  }
   .card.hidden { display: none; }
 
   .card-visual {
-    height: 210px; position: relative;
+    height: 190px; position: relative;
     display: flex; align-items: center; justify-content: center;
-    font-size: 4rem;
+    font-size: 4.2rem;
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 14px, rgba(0,0,0,.14) 14px 28px),
+      var(--accent, var(--lime));
   }
-  .v-coffee  { background: linear-gradient(135deg, #f7e6d0, #e3b98a); }
-  .v-food    { background: linear-gradient(135deg, #ffe1d6, #f5a08c); }
-  .v-drinks  { background: linear-gradient(135deg, #e4ecf7, #a9c3e8); }
-  .v-culture { background: linear-gradient(135deg, #e9e4f7, #c3b2e8); }
-  .v-shop    { background: linear-gradient(135deg, #e4f2e6, #a8d5b0); }
+  .card-visual .emoji { filter: drop-shadow(0 8px 14px rgba(0,0,0,.35)); transition: transform .2s; }
+  .card:hover .emoji { transform: scale(1.25) rotate(-8deg); }
 
-  .badge {
-    position: absolute; top: 16px; left: 16px;
-    background: rgba(28,26,23,0.85); color: #fff;
-    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 6px 12px; border-radius: 999px;
+  .sticker {
+    position: absolute; top: 14px; left: 14px;
+    background: #000; color: #fff;
+    font-size: .68rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase;
+    padding: 7px 14px; border-radius: 999px;
+    transform: rotate(-4deg);
   }
-  .badge.new { background: var(--accent); }
+  .sticker.new { background: #fff; color: #000; }
 
   .card-body { padding: 26px; flex: 1; display: flex; flex-direction: column; }
   .card-cat {
-    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em;
-    text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+    font-size: .7rem; font-weight: 900; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--accent, var(--lime)); margin-bottom: 10px;
   }
-  .card-body h3 {
-    font-family: var(--font-display);
-    font-size: 1.45rem; margin-bottom: 10px;
-  }
-  .card-body p { color: var(--ink-soft); font-size: 0.94rem; flex: 1; }
+  .card-body h3 { font-size: 1.5rem; font-weight: 900; letter-spacing: -.02em; margin-bottom: 10px; }
+  .card-body p { color: var(--muted); font-size: .93rem; flex: 1; }
   .card-meta {
     display: flex; justify-content: space-between; align-items: center;
-    margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line);
-    font-size: 0.84rem; color: var(--ink-soft);
+    margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--line);
+    font-size: .82rem; color: var(--muted);
   }
-  .card-meta .area { font-weight: 600; color: var(--ink); }
+  .card-meta .area { font-weight: 800; color: var(--ink); text-transform: uppercase; letter-spacing: .05em; }
 
-  /* ---------- Neighbourhoods ---------- */
-  .hoods { background: var(--ink); color: var(--bg); }
-  .hoods .section-head h2 { color: var(--bg); }
-  .hoods .section-head p { color: rgba(250,246,240,0.65); }
-  .hood-list { display: grid; gap: 1px; background: rgba(250,246,240,0.15); border-radius: var(--radius); overflow: hidden; }
+  .c-lime   { --accent: var(--lime); }
+  .c-pink   { --accent: var(--pink); }
+  .c-cyan   { --accent: var(--cyan); }
+  .c-hot    { --accent: var(--hot); }
+  .c-purple { --accent: #a76bff; }
+
+  /* ---------- neighbourhoods ---------- */
+  .hood-list { display: flex; flex-direction: column; }
   .hood {
-    display: flex; align-items: baseline; justify-content: space-between;
-    gap: 24px; padding: 30px 32px; background: var(--ink);
-    transition: background 0.2s; flex-wrap: wrap;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    padding: 34px 10px; border-bottom: 2px solid var(--line);
+    text-decoration: none; color: var(--ink);
+    transition: padding .2s, background .2s;
+    flex-wrap: wrap;
   }
-  .hood:hover { background: #2a2721; }
-  .hood h3 { font-family: var(--font-display); font-size: 1.6rem; }
-  .hood p { color: rgba(250,246,240,0.6); font-size: 0.92rem; max-width: 46ch; }
+  .hood:first-child { border-top: 2px solid var(--line); }
+  .hood h3 {
+    font-size: clamp(1.8rem, 4.5vw, 3.2rem);
+    font-weight: 900; text-transform: uppercase; letter-spacing: -.02em;
+    transition: color .2s, transform .2s;
+  }
+  .hood p { color: var(--muted); font-size: .92rem; max-width: 40ch; }
   .hood .count {
-    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--accent); white-space: nowrap;
+    font-size: .75rem; font-weight: 900; letter-spacing: .15em; text-transform: uppercase;
+    color: #000; background: var(--lime); padding: 8px 16px; border-radius: 999px;
+    transform: rotate(3deg); white-space: nowrap;
   }
+  .hood:hover { padding-left: 26px; background: rgba(200,255,46,.04); }
+  .hood:hover h3 { color: var(--lime); }
 
-  /* ---------- Newsletter ---------- */
-  .newsletter { text-align: center; }
-  .newsletter h2 {
-    font-family: var(--font-display);
-    font-size: clamp(1.9rem, 4vw, 2.8rem); margin-bottom: 12px;
+  /* ---------- newsletter ---------- */
+  .newsletter-box {
+    background: linear-gradient(120deg, var(--hot), var(--pink) 55%, var(--purple));
+    border-radius: 30px; padding: clamp(40px, 7vw, 80px);
+    text-align: center; position: relative; overflow: hidden;
+    transform: rotate(-.6deg);
   }
-  .newsletter p { color: var(--ink-soft); margin-bottom: 32px; }
-  .signup {
-    display: flex; gap: 12px; max-width: 440px; margin: 0 auto; flex-wrap: wrap;
+  .newsletter-box::after {
+    content: "✺ ✺ ✺"; position: absolute; top: 22px; right: 30px;
+    color: rgba(255,255,255,.5); font-size: 1.1rem; letter-spacing: .5em;
   }
+  .newsletter-box h2 { color: #fff; margin-bottom: 12px; }
+  .newsletter-box > p { color: rgba(255,255,255,.85); margin-bottom: 34px; }
+  .signup { display: flex; gap: 12px; max-width: 480px; margin: 0 auto; flex-wrap: wrap; }
   .signup input {
     flex: 1; min-width: 220px;
-    padding: 14px 22px; border-radius: 999px;
-    border: 1.5px solid var(--line); background: var(--card);
-    font-size: 0.95rem; font-family: inherit; color: var(--ink);
-    outline: none; transition: border-color 0.2s;
+    padding: 16px 24px; border-radius: 999px; border: none;
+    font-size: .95rem; font-family: inherit; outline: none;
+    background: rgba(0,0,0,.35); color: #fff;
   }
-  .signup input:focus { border-color: var(--accent); }
+  .signup input::placeholder { color: rgba(255,255,255,.55); }
   .signup button {
-    padding: 14px 30px; border-radius: 999px; border: none;
-    background: var(--accent); color: #fff; font-weight: 600;
-    font-size: 0.95rem; cursor: pointer; font-family: inherit;
-    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 16px 32px; border-radius: 999px; border: none;
+    background: var(--lime); color: #000;
+    font-weight: 900; font-size: .9rem; text-transform: uppercase; letter-spacing: .06em;
+    cursor: pointer; font-family: inherit;
+    transition: transform .15s;
   }
-  .signup button:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(228,87,46,0.35); }
-  .signup-note { font-size: 0.8rem; color: var(--ink-soft); margin-top: 16px; }
+  .signup button:hover { transform: scale(1.06) rotate(-2deg); }
+  .signup-note { font-size: .8rem; color: rgba(255,255,255,.7); margin-top: 18px; }
 
-  /* ---------- Footer ---------- */
-  footer {
-    border-top: 1px solid var(--line);
-    padding: 40px 0; text-align: center;
-    color: var(--ink-soft); font-size: 0.85rem;
+  /* ---------- footer ---------- */
+  footer { padding: 60px 0 40px; text-align: center; color: var(--muted); font-size: .82rem; }
+  footer .big {
+    font-size: clamp(3rem, 14vw, 11rem);
+    font-weight: 900; letter-spacing: -.04em; line-height: 1; text-transform: uppercase;
+    color: transparent; -webkit-text-stroke: 1.5px var(--line);
+    margin-bottom: 30px; user-select: none;
   }
-  footer .logo { font-size: 1.2rem; display: inline-block; margin-bottom: 8px; }
 
-  /* ---------- Reveal animation ---------- */
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  /* ---------- reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease; }
   .reveal.in { opacity: 1; transform: none; }
+  .card.reveal.in:nth-child(odd)  { transform: rotate(-.6deg); }
+  .card.reveal.in:nth-child(even) { transform: rotate(.6deg); }
+  .card.reveal.in:hover { transform: rotate(0) translateY(-8px) scale(1.02); }
+
   @media (prefers-reduced-motion: reduce) {
+    .blob, .marquee-track, .kicker .pulse { animation: none !important; }
     .reveal { opacity: 1; transform: none; transition: none; }
-    .ticker-track { animation: none; }
   }
 </style>
 </head>
 <body>
 
+<div class="blobs" aria-hidden="true">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<main>
+
 <nav>
   <div class="nav-inner">
-    <a class="logo" href="#">BRDA<span>.</span></a>
+    <a class="logo" href="#">BRDA<i>★</i></a>
     <div class="nav-links">
       <a href="#hotspots">Hotspots</a>
-      <a href="#hoods">Neighbourhoods</a>
-      <a href="#newsletter">Newsletter</a>
+      <a href="#hoods">Hoods</a>
+      <a class="nav-cta" href="#newsletter">Get the drop</a>
     </div>
   </div>
 </nav>
 
 <header>
   <div class="wrap">
-    <span class="kicker">Fresh in the city · Summer 2026</span>
-    <h1>The newest <em>hotspots</em> of Breda, handpicked.</h1>
-    <p class="lede">From natural-wine bars in the Belcrum to slow-coffee roasters on the Ginnekenweg — BRDA. tracks every notable opening in town, so you always know where to go next.</p>
+    <span class="kicker"><span class="pulse"></span> Live from Breda · Summer 2026</span>
+    <h1>
+      <span class="fill">Nieuw.</span><br>
+      <span class="stroke">Heet.</span><br>
+      <span class="tilt">Breda.</span>
+    </h1>
+    <p class="lede">Forget the tourist lists. <b>BRDA★</b> hunts down every opening that actually matters — natural wine behind unmarked doors, noodles in warehouses, matcha before it's mainstream.</p>
     <div class="hero-cta">
-      <a class="btn btn-primary" href="#hotspots">Explore hotspots</a>
-      <a class="btn btn-ghost" href="#newsletter">Get the weekly drop</a>
+      <a class="btn btn-hot" href="#hotspots">Show me the spots</a>
+      <a class="btn btn-line" href="#newsletter">Weekly drop →</a>
     </div>
-    <div class="hero-stats">
-      <div class="stat"><b>24</b><span>new openings tracked</span></div>
-      <div class="stat"><b>6</b><span>neighbourhoods covered</span></div>
-      <div class="stat"><b>1×</b><span>per week, in your inbox</span></div>
+  </div>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Just opened ★</span><span>Natural wine ★</span><span>Rooftop szn ★</span><span>Belcrum ★</span><span>Specialty coffee ★</span><span>Gallery nights ★</span><span>Haagdijk ★</span><span>No reservations ★</span>
+      <span>Just opened ★</span><span>Natural wine ★</span><span>Rooftop szn ★</span><span>Belcrum ★</span><span>Specialty coffee ★</span><span>Gallery nights ★</span><span>Haagdijk ★</span><span>No reservations ★</span>
     </div>
   </div>
 </header>
 
-<div class="ticker" aria-hidden="true">
-  <div class="ticker-track">
-    <span>Just opened <i class="dot">●</i></span><span>Natural wine <i class="dot">●</i></span><span>Specialty coffee <i class="dot">●</i></span><span>Rooftop terraces <i class="dot">●</i></span><span>Vintage &amp; concept stores <i class="dot">●</i></span><span>Gallery nights <i class="dot">●</i></span><span>Belcrum <i class="dot">●</i></span><span>Ginneken <i class="dot">●</i></span><span>City centre <i class="dot">●</i></span>
-    <span>Just opened <i class="dot">●</i></span><span>Natural wine <i class="dot">●</i></span><span>Specialty coffee <i class="dot">●</i></span><span>Rooftop terraces <i class="dot">●</i></span><span>Vintage &amp; concept stores <i class="dot">●</i></span><span>Gallery nights <i class="dot">●</i></span><span>Belcrum <i class="dot">●</i></span><span>Ginneken <i class="dot">●</i></span><span>City centre <i class="dot">●</i></span>
-  </div>
-</div>
-
 <section id="hotspots">
   <div class="wrap">
     <div class="section-head reveal">
-      <h2>This month's openings</h2>
-      <p>Every spot below opened its doors in the last few months. Filter by mood and go discover.</p>
+      <h2>Fresh <em>openings</em></h2>
+      <p>Everything below opened in the last few months. Filter by mood, then go before everyone else does.</p>
     </div>
 
     <div class="filters reveal" role="group" aria-label="Filter hotspots by category">
-      <button class="chip active" data-filter="all">All</button>
+      <button class="chip active" data-filter="all">All of it</button>
       <button class="chip" data-filter="coffee">Coffee</button>
       <button class="chip" data-filter="food">Food</button>
       <button class="chip" data-filter="drinks">Drinks</button>
@@ -323,144 +365,148 @@
     </div>
 
     <div class="grid">
-      <article class="card reveal" data-cat="coffee">
-        <div class="card-visual v-coffee"><span>☕</span><span class="badge new">New</span></div>
+      <article class="card reveal c-lime" data-cat="coffee">
+        <div class="card-visual"><span class="emoji">☕</span><span class="sticker new">Just opened</span></div>
         <div class="card-body">
           <div class="card-cat">Coffee</div>
           <h3>Ronde Bonen</h3>
-          <p>A slow-coffee micro-roastery with just twelve seats and a weekly single-origin menu. Come for the flat white, stay for the cardamom buns.</p>
-          <div class="card-meta"><span class="area">Ginnekenweg</span><span>€ · opens 08:00</span></div>
+          <p>Twelve seats, one roaster, zero compromise. Weekly single-origin menu and cardamom buns that cause actual queues.</p>
+          <div class="card-meta"><span class="area">Ginnekenweg</span><span>€ · from 08:00</span></div>
         </div>
       </article>
 
-      <article class="card reveal" data-cat="food">
-        <div class="card-visual v-food"><span>🍜</span><span class="badge new">New</span></div>
+      <article class="card reveal c-hot" data-cat="food">
+        <div class="card-visual"><span class="emoji">🍜</span><span class="sticker new">Just opened</span></div>
         <div class="card-body">
           <div class="card-cat">Food</div>
           <h3>Noedelbar Noord</h3>
-          <p>Hand-pulled noodles and smoky broths in a former warehouse. Counter seating only, vinyl on the turntable, and a killer chili oil.</p>
+          <p>Hand-pulled noodles and smoky broths in a raw warehouse. Counter seats only, vinyl spinning, chili oil that bites back.</p>
           <div class="card-meta"><span class="area">Belcrum</span><span>€€ · dinner only</span></div>
         </div>
       </article>
 
-      <article class="card reveal" data-cat="drinks">
-        <div class="card-visual v-drinks"><span>🍷</span><span class="badge new">New</span></div>
+      <article class="card reveal c-pink" data-cat="drinks">
+        <div class="card-visual"><span class="emoji">🍷</span><span class="sticker">If you know</span></div>
         <div class="card-body">
           <div class="card-cat">Drinks</div>
           <h3>Bar Barrière</h3>
-          <p>Natural wine bar hidden behind an unmarked green door. Fifty low-intervention labels, sharing plates, and candlelight until late.</p>
+          <p>Unmarked green door. Fifty natural wines, candlelight, sharing plates. Don't post the location — just go.</p>
           <div class="card-meta"><span class="area">Haagdijk</span><span>€€ · from 17:00</span></div>
         </div>
       </article>
 
-      <article class="card reveal" data-cat="culture">
-        <div class="card-visual v-culture"><span>🎨</span><span class="badge">Hot</span></div>
+      <article class="card reveal c-purple" data-cat="culture">
+        <div class="card-visual"><span class="emoji">🎛️</span><span class="sticker">Hot rn</span></div>
         <div class="card-body">
           <div class="card-cat">Culture</div>
           <h3>Loods Lumen</h3>
-          <p>A raw exhibition space for light art and digital installations at the harbour. First Friday of the month: open studios and DJ sets.</p>
-          <div class="card-meta"><span class="area">Havenkwartier</span><span>Free entry · Thu–Sun</span></div>
+          <p>Light art and digital installations in a harbour shed. First Friday of the month it turns into a rave with visuals.</p>
+          <div class="card-meta"><span class="area">Havenkwartier</span><span>Free · Thu–Sun</span></div>
         </div>
       </article>
 
-      <article class="card reveal" data-cat="food">
-        <div class="card-visual v-food"><span>🥐</span><span class="badge">Hot</span></div>
+      <article class="card reveal c-hot" data-cat="food">
+        <div class="card-visual"><span class="emoji">🥐</span><span class="sticker">Sells out</span></div>
         <div class="card-body">
           <div class="card-cat">Food</div>
           <h3>Boterham &amp; Zo</h3>
-          <p>All-day bakery-café doing sourdough, seasonal open sandwiches and a legendary hazelnut croissant that sells out before noon.</p>
-          <div class="card-meta"><span class="area">City centre</span><span>€ · 08:00–16:00</span></div>
+          <p>Sourdough everything and a hazelnut croissant that's gone by 11:30. You've been warned. Twice.</p>
+          <div class="card-meta"><span class="area">Centrum</span><span>€ · 08:00–16:00</span></div>
         </div>
       </article>
 
-      <article class="card reveal" data-cat="drinks">
-        <div class="card-visual v-drinks"><span>🍸</span><span class="badge new">New</span></div>
+      <article class="card reveal c-cyan" data-cat="drinks">
+        <div class="card-visual"><span class="emoji">🍸</span><span class="sticker new">Just opened</span></div>
         <div class="card-body">
           <div class="card-cat">Drinks</div>
           <h3>Dakterras DK9</h3>
-          <p>Rooftop aperitivo bar with a view over the Grote Kerk. Spritzes, small plates, and golden-hour seats you'll want to reserve.</p>
-          <div class="card-meta"><span class="area">City centre</span><span>€€€ · Apr–Oct</span></div>
+          <p>Rooftop aperitivo with the Grote Kerk at eye level. Spritz, small plates, golden hour. Book or cry.</p>
+          <div class="card-meta"><span class="area">Centrum</span><span>€€€ · Apr–Oct</span></div>
         </div>
       </article>
 
-      <article class="card reveal" data-cat="shop">
-        <div class="card-visual v-shop"><span>🌿</span><span class="badge new">New</span></div>
+      <article class="card reveal c-lime" data-cat="shop">
+        <div class="card-visual"><span class="emoji">🌵</span><span class="sticker new">Just opened</span></div>
         <div class="card-body">
           <div class="card-cat">Shops</div>
           <h3>Studio Stof</h3>
-          <p>Concept store blending Dutch design, dried flowers and small-batch ceramics. Workshops on Saturdays, coffee corner in the back.</p>
+          <p>Dutch design, dried flowers, small-batch ceramics. Saturday workshops, espresso in the back, wallet in danger.</p>
           <div class="card-meta"><span class="area">Ginneken</span><span>Tue–Sat</span></div>
         </div>
       </article>
 
-      <article class="card reveal" data-cat="coffee">
-        <div class="card-visual v-coffee"><span>🍵</span><span class="badge">Hot</span></div>
+      <article class="card reveal c-cyan" data-cat="coffee">
+        <div class="card-visual"><span class="emoji">🍵</span><span class="sticker">Hot rn</span></div>
         <div class="card-body">
           <div class="card-cat">Coffee</div>
           <h3>Matcha Ma?</h3>
-          <p>Breda's first dedicated matcha bar. Ceremonial-grade whisked to order, strawberry matcha lattes, and mochi from a local maker.</p>
+          <p>Breda's first pure matcha bar. Ceremonial grade whisked to order, strawberry lattes, mochi from a local maker.</p>
           <div class="card-meta"><span class="area">Haagdijk</span><span>€ · 09:00–18:00</span></div>
         </div>
       </article>
 
-      <article class="card reveal" data-cat="culture">
-        <div class="card-visual v-culture"><span>📚</span><span class="badge new">New</span></div>
+      <article class="card reveal c-purple" data-cat="culture">
+        <div class="card-visual"><span class="emoji">📚</span><span class="sticker new">Just opened</span></div>
         <div class="card-body">
           <div class="card-cat">Culture</div>
           <h3>De Leeszaal</h3>
-          <p>Part indie bookshop, part reading café, part event stage. Author nights, poetry slams and shelves you can get lost in for hours.</p>
-          <div class="card-meta"><span class="area">Belcrum</span><span>Free entry · daily</span></div>
+          <p>Indie bookshop × reading café × tiny stage. Poetry slams, author nights, and shelves to get lost in.</p>
+          <div class="card-meta"><span class="area">Belcrum</span><span>Free · daily</span></div>
         </div>
       </article>
     </div>
   </div>
 </section>
 
-<section class="hoods" id="hoods">
+<section id="hoods">
   <div class="wrap">
     <div class="section-head reveal">
-      <h2>Know your neighbourhoods</h2>
-      <p>Each corner of Breda has its own flavour. Here's where the energy is right now.</p>
+      <h2>The <em>hoods</em></h2>
+      <p>Where the energy is right now, ranked by vibe per square metre.</p>
     </div>
     <div class="hood-list reveal">
-      <div class="hood">
-        <div><h3>Belcrum</h3><p>Industrial-turned-creative. Warehouses, breweries, studios and the city's most experimental kitchens.</p></div>
+      <a class="hood" href="#hotspots">
+        <div><h3>Belcrum</h3><p>Warehouses, breweries, studios. The city's experimental kitchen.</p></div>
         <span class="count">7 new spots</span>
-      </div>
-      <div class="hood">
-        <div><h3>Ginneken</h3><p>Village charm inside the city. Boutique shopping, leafy terraces and long Sunday lunches.</p></div>
+      </a>
+      <a class="hood" href="#hotspots">
+        <div><h3>Haagdijk</h3><p>The street everyone will claim they knew first. They didn't. You will.</p></div>
+        <span class="count">6 new spots</span>
+      </a>
+      <a class="hood" href="#hotspots">
+        <div><h3>Centrum</h3><p>The classics, rebooted. Rooftops and new life around the Grote Markt.</p></div>
+        <span class="count">6 new spots</span>
+      </a>
+      <a class="hood" href="#hotspots">
+        <div><h3>Ginneken</h3><p>Village charm, boutique shopping, terraces made for long Sundays.</p></div>
         <span class="count">5 new spots</span>
-      </div>
-      <div class="hood">
-        <div><h3>Haagdijk</h3><p>The up-and-comer. Indie bars, vintage stores and the street everyone will claim they knew first.</p></div>
-        <span class="count">6 new spots</span>
-      </div>
-      <div class="hood">
-        <div><h3>City centre</h3><p>The classics, refreshed. Rooftops, all-day dining and new life around the Grote Markt.</p></div>
-        <span class="count">6 new spots</span>
-      </div>
+      </a>
     </div>
   </div>
 </section>
 
-<section class="newsletter" id="newsletter">
-  <div class="wrap reveal">
-    <h2>Never miss an opening.</h2>
-    <p>One email, every Thursday. The newest spots, zero fluff, straight to your inbox.</p>
-    <form class="signup" onsubmit="return subscribe(event)">
-      <input type="email" required placeholder="you@example.com" aria-label="Email address">
-      <button type="submit">Sign me up</button>
-    </form>
-    <p class="signup-note" id="signup-note">Free forever. Unsubscribe anytime.</p>
+<section id="newsletter">
+  <div class="wrap">
+    <div class="newsletter-box reveal">
+      <h2>Never miss<br>an opening</h2>
+      <p>One email. Every Thursday. The newest spots before they hit anyone's feed.</p>
+      <form class="signup" onsubmit="return subscribe(event)">
+        <input type="email" required placeholder="you@example.com" aria-label="Email address">
+        <button type="submit">I'm in</button>
+      </form>
+      <p class="signup-note" id="signup-note">Free forever. Unsubscribe whenever.</p>
+    </div>
   </div>
 </section>
 
 <footer>
+  <div class="big" aria-hidden="true">BRDA★</div>
   <div class="wrap">
-    <a class="logo" href="#">BRDA<span>.</span></a>
-    <p>Made with love for Breda · © 2026 BRDA. — venues shown are illustrative examples</p>
+    <p>Made loud for Breda · © 2026 BRDA★ — venues shown are illustrative examples</p>
   </div>
 </footer>
+
+</main>
 
 <script>
   // Category filter
@@ -482,14 +528,14 @@
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
     });
-  }, { threshold: 0.12 });
+  }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
   // Newsletter (front-end only)
   function subscribe(e) {
     e.preventDefault();
     const note = document.getElementById('signup-note');
-    note.textContent = "You're on the list! First drop lands Thursday. 🎉";
+    note.textContent = "You're in. First drop lands Thursday ★";
     e.target.reset();
     return false;
   }
