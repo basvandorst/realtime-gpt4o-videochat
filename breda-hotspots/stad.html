@@ -68,8 +68,25 @@
 
 <section class="spots" id="netgeopend">
   <div class="wrap">
-    <div class="sec-title reveal"><h2>Net geopend</h2></div>
+    <div class="sec-title reveal">
+      <h2 id="spots-titel">Net geopend</h2>
+      <div class="view-toggle" role="group" aria-label="Weergave">
+        <button class="vt actief" id="vt-lijst">Lijst</button>
+        <button class="vt" id="vt-kaart">Kaart</button>
+      </div>
+    </div>
     <div class="grid" id="opened-grid"></div>
+    <div id="kaart-wrap" hidden>
+      <div class="kaart" id="kaart">
+        <span class="noord">N ↑</span>
+        <span class="stadnaam" id="kaart-stad"></span>
+      </div>
+      <div class="legenda">
+        <span><i class="stip"></i>Net geopend</span>
+        <span><i class="stip wit"></i>Binnenkort open</span>
+        <span>Klik een spot voor het verhaal</span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -170,6 +187,37 @@
       <h3><b>${esc(s.naam)}</b> — <em>${esc(s.tagline)}</em></h3>
       <div class="byline">${esc(s.meta)}</div>
     </a>`).join("");
+
+  // Kaart: spots geplot op coördinaten (lijst/kaart-toggle)
+  const kaart = document.getElementById("kaart");
+  document.getElementById("kaart-stad").textContent = stad.naam;
+  const metLL = stad.spots.filter(s => s.ll);
+  const lats = metLL.map(s => s.ll[0]), lngs = metLL.map(s => s.ll[1]);
+  const pad = 0.12;
+  const spanLat = Math.max(Math.max(...lats) - Math.min(...lats), 1e-4);
+  const spanLng = Math.max(Math.max(...lngs) - Math.min(...lngs), 1e-4);
+  const minLat = Math.min(...lats) - spanLat * pad, maxLat = Math.max(...lats) + spanLat * pad;
+  const minLng = Math.min(...lngs) - spanLng * pad, maxLng = Math.max(...lngs) + spanLng * pad;
+  kaart.insertAdjacentHTML("beforeend", metLL.map(s => {
+    const x = Math.min(92, Math.max(8, (s.ll[1] - minLng) / (maxLng - minLng) * 100));
+    const y = Math.min(90, Math.max(10, (maxLat - s.ll[0]) / (maxLat - minLat) * 100));
+    const k = dvan(s.datum) > vandaag;
+    return `<a class="marker${k ? " komend" : ""}" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%" href="${spotLink(key, s)}" title="${esc(s.naam)} — ${k ? "opent" : "geopend"} ${fmt(s.datum)}">
+      <span class="stip"></span><span class="lbl">${esc(s.naam)}</span>
+    </a>`;
+  }).join(""));
+
+  const vtLijst = document.getElementById("vt-lijst");
+  const vtKaart = document.getElementById("vt-kaart");
+  function zetWeergave(kaartActief) {
+    document.getElementById("opened-grid").hidden = kaartActief;
+    document.getElementById("kaart-wrap").hidden = !kaartActief;
+    document.getElementById("spots-titel").textContent = kaartActief ? "Alle spots op de kaart" : "Net geopend";
+    vtLijst.classList.toggle("actief", !kaartActief);
+    vtKaart.classList.toggle("actief", kaartActief);
+  }
+  vtLijst.addEventListener("click", () => zetWeergave(false));
+  vtKaart.addEventListener("click", () => zetWeergave(true));
 
   document.getElementById("hood-grid").innerHTML = stad.buurten.map(b => {
     const n = stad.spots.filter(s => s.buurt === b.naam).length;

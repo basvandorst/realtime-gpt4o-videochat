@@ -404,3 +404,66 @@
   font-size: .62rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
   padding: 6px 11px;
 }
+
+/* ---------- lijst/kaart-toggle ---------- */
+.view-toggle { display: flex; gap: 22px; }
+.vt {
+  background: none; border: none; cursor: pointer; padding: 2px 0;
+  font-family: var(--sans); font-size: .72rem; font-weight: 600;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--grey);
+  border-bottom: 1px solid transparent; transition: color .2s;
+}
+.vt:hover { color: var(--ink); }
+.vt.actief { color: var(--ink); border-bottom-color: var(--ink); }
+
+/* ---------- editorial kaart ---------- */
+.kaart {
+  position: relative; border: 1px solid var(--line);
+  aspect-ratio: 16/9; overflow: hidden;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 71px, var(--line) 71px 72px),
+    repeating-linear-gradient(90deg, transparent 0 71px, var(--line) 71px 72px),
+    #fbfaf8;
+}
+@media (max-width: 720px) { .kaart { aspect-ratio: 4/5; } }
+.marker {
+  position: absolute; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  text-decoration: none;
+}
+.marker .stip {
+  width: 13px; height: 13px; border-radius: 50%;
+  background: var(--ink); border: 2px solid var(--ink);
+  box-shadow: 0 0 0 5px rgba(17,17,17,.07);
+}
+.marker.komend .stip { background: #fff; }
+.marker .lbl {
+  font-size: .6rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+  background: rgba(255,255,255,.94); border: 1px solid var(--line);
+  padding: 4px 9px; white-space: nowrap; color: var(--ink);
+  transition: all .15s;
+}
+.marker:hover { z-index: 6; }
+.marker:hover .lbl { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.kaart .stadnaam {
+  position: absolute; right: 20px; bottom: 14px;
+  font-family: var(--serif); font-style: italic; font-size: 1.05rem; color: var(--grey);
+  pointer-events: none;
+}
+.kaart .noord {
+  position: absolute; left: 20px; top: 14px;
+  font-size: .62rem; font-weight: 600; letter-spacing: .24em; text-transform: uppercase;
+  color: var(--grey); pointer-events: none;
+}
+.legenda {
+  display: flex; gap: 30px; align-items: center; margin-top: 16px;
+  font-size: .64rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--grey);
+}
+.legenda .stip {
+  display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--ink); margin-right: 9px; vertical-align: -1px;
+}
+.legenda .stip.wit { background: #fff; border: 1.5px solid var(--ink); }
+.sec-title::after { order: 1; }
+.sec-title .view-toggle { order: 2; }
+[hidden] { display: none !important; }
