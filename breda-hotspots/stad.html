@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPEND — de openingskalender</title>
+<meta name="description" content="De openingskalender van jouw stad: wat er net open is en wat er aankomt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="sub">
+      <span><b>Abonneer</b> <em>op nieuwe spots</em></span>
+      <form onsubmit="return subscribe(event)" style="display:flex;gap:14px;align-items:baseline;">
+        <input type="email" required placeholder="Jouw e-mailadres" aria-label="E-mailadres">
+        <button type="submit">Abonneer →</button>
+      </form>
+    </div>
+    <div class="socials">
+      <span><b>12K</b> volgers</span>
+      <span><b>8K</b> lezers</span>
+      <span><b id="stat-spots">–</b> nieuwe spots</span>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a class="city-pick" href="#steden"><span id="city-pick-label">Kies je stad</span> <span class="chev">▾</span></a>
+    <a class="logo" id="logo" href="index.html">OPEND</a>
+    <div class="nav-right">
+      <a href="#binnenkort">Binnenkort</a>
+      <a href="#netgeopend">Net geopend</a>
+      <a href="#nieuwsbrief">Nieuwsbrief</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+
+      <a class="feature reveal" href="#binnenkort">
+        <div class="photo" id="feature-photo"></div>
+        <div class="cat" id="feature-cat"></div>
+        <h1 id="feature-title"></h1>
+        <p class="excerpt" id="feature-excerpt"></p>
+        <div class="byline">Door de redactie <span>· wekelijks bijgewerkt</span></div>
+      </a>
+
+      <div class="side-grid" id="side-grid"></div>
+
+    </div>
+  </div>
+</header>
+
+<section class="agenda" id="binnenkort">
+  <div class="wrap">
+    <div class="sec-title reveal"><h2>Binnenkort open</h2></div>
+    <div id="agenda-list"></div>
+  </div>
+</section>
+
+<section class="spots" id="netgeopend">
+  <div class="wrap">
+    <div class="sec-title reveal"><h2>Net geopend</h2></div>
+    <div class="grid" id="opened-grid"></div>
+  </div>
+</section>
+
+<section class="quote">
+  <div class="wrap reveal">
+    <p class="q">"Vergeet de lijstjes voor toeristen — <em>de beste adressen van <span id="quote-stad"></span> fluister je door.</em>"</p>
+    <div class="who" id="quote-who"></div>
+  </div>
+</section>
+
+<section class="hoods" id="buurten">
+  <div class="wrap">
+    <div class="sec-title reveal"><h2>De buurten</h2></div>
+    <div class="hood-grid" id="hood-grid"></div>
+  </div>
+</section>
+
+<section class="world" id="steden">
+  <div class="wrap">
+    <div class="sec-title reveal"><h2>Kies je stad</h2></div>
+    <p class="world-lede reveal">Begonnen in Breda, onderweg naar de wereld. <em>Elke stad zijn eigen letters,</em> elke week nieuwe adressen — van dorp tot metropool.</p>
+    <div class="world-grid" id="world-grid"></div>
+  </div>
+</section>
+
+<section class="newsletter" id="nieuwsbrief">
+  <div class="wrap reveal">
+    <div class="kicker">Elke donderdag</div>
+    <h2><b>Mis geen opening</b> — <em>de nieuwste spots in je inbox</em></h2>
+    <p>Eén mail per week. De nieuwste adressen van jouw stad, voordat ze in ieders feed staan.</p>
+    <form class="signup" onsubmit="return subscribe(event)">
+      <input type="email" required placeholder="Jouw e-mailadres" aria-label="E-mailadres">
+      <button type="submit">Abonneer →</button>
+    </form>
+    <p class="signup-note" id="signup-note">Gratis, voor altijd. Uitschrijven kan altijd.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" id="logo-footer" href="index.html">OPEND</a>
+    <div class="links">
+      <a href="#binnenkort">Binnenkort</a>
+      <a href="#buurten">Buurten</a>
+      <a href="#steden">Steden</a>
+      <a href="#nieuwsbrief">Nieuwsbrief</a>
+    </div>
+    <small>© 2026 — begonnen in Breda, onderweg naar de wereld · getoonde adressen zijn illustratief</small>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script>
+  const key = STEDEN[qs("stad")] ? qs("stad") : "breda";
+  const stad = STEDEN[key];
+  const komend = komendVan(stad);
+  const geopend = geopendVan(stad);
+
+  document.title = stad.code + " — Nieuwe hotspots in " + stad.naam;
+  setWordmark(stad.code);
+  document.getElementById("logo").textContent = stad.code;
+  document.getElementById("logo-footer").textContent = stad.code;
+  document.getElementById("city-pick-label").textContent = stad.naam;
+  document.getElementById("stat-spots").textContent = stad.spots.length;
+
+  document.getElementById("feature-photo").innerHTML = foto(stad.hero);
+  document.getElementById("feature-cat").innerHTML = `De openingskalender <span class="sep">—</span> ${esc(stad.naam)}`;
+  document.getElementById("feature-title").innerHTML = `<b>${esc(stad.naam)} ontwaakt</b> — <em>wat er net open is en wat er deze zomer aankomt</em>`;
+  document.getElementById("feature-excerpt").textContent = stad.intro;
+  document.getElementById("quote-stad").textContent = stad.naam;
+  document.getElementById("quote-who").textContent = stad.code + " — het zomernummer";
+
+  document.getElementById("side-grid").innerHTML = geopend.slice(0, 4).map(s => `
+    <a class="story reveal" href="${spotLink(key, s)}">
+      <div class="photo">${foto(s.foto)}</div>
+      <div class="cat">${esc(s.cat)} <span class="sep">—</span> ${fmt(s.datum)}</div>
+      <h3><b>${esc(s.naam)}</b> — <em>${esc(s.tagline)}</em></h3>
+      <div class="byline">${esc(s.buurt)}</div>
+    </a>`).join("");
+
+  document.getElementById("agenda-list").innerHTML = komend.length ? komend.map(s => {
+    const d = dvan(s.datum);
+    return `<a class="agenda-row reveal" href="${spotLink(key, s)}">
+      <div class="a-date"><b>${d.getDate()}</b><span class="m">${MAANDEN[d.getMonth()]}</span><span class="in">${relatief(s.datum)}</span></div>
+      <div class="a-body">
+        <div class="cat">${esc(s.cat)} <span class="sep">·</span> ${esc(s.buurt)}</div>
+        <h3><b>${esc(s.naam)}</b> — <em>${esc(s.tagline)}</em></h3>
+        <div class="byline">${esc(s.meta)}</div>
+      </div>
+      <div class="a-thumb photo">${foto(s.foto)}</div>
+    </a>`;
+  }).join("") : `<p style="color:var(--grey)">Nog geen aangekondigde openingen in ${esc(stad.naam)} — tips zijn welkom.</p>`;
+
+  document.getElementById("opened-grid").innerHTML = geopend.map(s => `
+    <a class="story reveal" href="${spotLink(key, s)}">
+      <div class="photo">${foto(s.foto, `<span class="date-flag">Geopend ${fmt(s.datum)}</span>`)}</div>
+      <div class="cat">${esc(s.cat)} <span class="sep">·</span> ${esc(s.buurt)}</div>
+      <h3><b>${esc(s.naam)}</b> — <em>${esc(s.tagline)}</em></h3>
+      <div class="byline">${esc(s.meta)}</div>
+    </a>`).join("");
+
+  document.getElementById("hood-grid").innerHTML = stad.buurten.map(b => {
+    const n = stad.spots.filter(s => s.buurt === b.naam).length;
+    return `<a class="hood reveal" href="#netgeopend">
+      <div class="photo">${foto(b.foto)}</div>
+      <div class="hood-body"><h3>${esc(b.naam)}</h3><p>${esc(b.sub)}</p><span class="n">${n ? n + (n === 1 ? " nieuwe spot" : " nieuwe spots") : "in de gaten gehouden"}</span></div>
+    </a>`;
+  }).join("");
+
+  document.getElementById("world-grid").innerHTML = WERELD.map(groep => `
+    <div class="land reveal">
+      <h3>${esc(groep.land)}</h3>
+      <ul>${groep.steden.map(s => {
+        if (s.key) {
+          const st = STEDEN[s.key];
+          const hier = s.key === key;
+          return `<li><a href="stad.html?stad=${s.key}" class="${hier ? "actief" : ""}">
+            <span class="cnaam">${esc(st.naam)}</span>
+            <span class="n">${hier ? "je bent hier" : st.spots.length + " spots"}</span></a></li>`;
+        }
+        return `<li><span class="soon"><span class="cnaam">${esc(s.naam)}</span><span class="n">binnenkort</span></span></li>`;
+      }).join("")}</ul>
+    </div>`).join("");
+
+  activeer();
+</script>
+
+</body>
+</html>
