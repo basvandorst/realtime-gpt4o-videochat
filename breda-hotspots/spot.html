@@ -69,6 +69,8 @@
         <a class="btn-insta" id="btn-insta" href="#" target="_blank" rel="noopener">Volg op Instagram</a>
       </div>
       <a class="btn-ics" id="btn-ics" href="#" download>Zet in agenda</a>
+      <div class="kaartje" id="kaartje"></div>
+      <a class="btn-ics" id="btn-route" href="#" target="_blank" rel="noopener">Route via Google Maps</a>
     </aside>
   </div>
 </div>
@@ -221,6 +223,14 @@
   btn.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
   btn.download = slug(spot.naam) + ".ics";
   if (!komend) btn.textContent = "Bewaar in agenda";
+
+  // De plek: Google Maps-embed (zonder API-key) + route-link
+  const plek = spot.adres ? spot.adres + ", " + stad.naam : stad.naam;
+  const qPlek = encodeURIComponent(plek);
+  document.getElementById("kaartje").innerHTML =
+    `<iframe src="https://www.google.com/maps?q=${qPlek}&z=16&output=embed&hl=nl" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen title="Kaart: ${esc(plek)}"></iframe>`;
+  document.getElementById("btn-route").href =
+    "https://www.google.com/maps/dir/?api=1&destination=" + qPlek;
 
   // Meer in deze stad
   document.getElementById("related-title").textContent = "Meer in " + stad.naam;

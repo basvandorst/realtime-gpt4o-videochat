@@ -77,6 +77,7 @@
     </div>
     <div class="grid" id="opened-grid"></div>
     <div id="kaart-wrap" hidden>
+      <div class="gmap" id="gmap" hidden></div>
       <div class="kaart" id="kaart">
         <span class="noord">N ↑</span>
         <span class="stadnaam" id="kaart-stad"></span>
@@ -139,6 +140,7 @@
 </footer>
 
 <script src="data.js"></script>
+<script src="config.js" onerror="this.remove()"></script>
 <script>
   const key = STEDEN[qs("stad")] ? qs("stad") : "breda";
   const stad = STEDEN[key];
@@ -207,6 +209,54 @@
     </a>`;
   }).join(""));
 
+  // Google Maps als er een API-key is geconfigureerd; anders blijft de
+  // ingebouwde editorial kaart staan.
+  let gmapsGeladen = false;
+  window.initGMap = function () {
+    const el = document.getElementById("gmap");
+    const map = new google.maps.Map(el, {
+      mapTypeControl: false, streetViewControl: false, fullscreenControl: true,
+      styles: [
+        { elementType: "geometry", stylers: [{ saturation: -100 }, { lightness: 12 }] },
+        { elementType: "labels.text.fill", stylers: [{ color: "#767676" }] },
+        { featureType: "poi", stylers: [{ visibility: "off" }] },
+        { featureType: "transit", stylers: [{ visibility: "off" }] },
+        { featureType: "water", stylers: [{ saturation: -100 }, { lightness: 30 }] },
+      ],
+    });
+    const bounds = new google.maps.LatLngBounds();
+    metLL.forEach(s => {
+      const k = dvan(s.datum) > vandaag;
+      const pos = { lat: s.ll[0], lng: s.ll[1] };
+      const m = new google.maps.Marker({
+        map, position: pos, title: s.naam + " — " + (k ? "opent " : "geopend ") + fmt(s.datum),
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE, scale: 8,
+          fillColor: k ? "#ffffff" : "#111111", fillOpacity: 1,
+          strokeColor: "#111111", strokeWeight: 2,
+        },
+        label: { text: s.naam, color: "#111111", fontSize: "11px", fontWeight: "600", className: "gmap-lbl" },
+      });
+      m.addListener("click", () => { location.href = spotLink(key, s); });
+      bounds.extend(pos);
+    });
+    map.fitBounds(bounds, 60);
+    el.hidden = false;
+    document.getElementById("kaart").hidden = true;
+    gmapsGeladen = true;
+  };
+  function laadGoogleMaps() {
+    if (gmapsGeladen || document.getElementById("gmaps-sdk")) return;
+    const sleutel = (window.OPEND_CONFIG || {}).googleMapsApiKey;
+    if (!sleutel) return;
+    const s = document.createElement("script");
+    s.id = "gmaps-sdk";
+    s.src = "https://maps.googleapis.com/maps/api/js?key=" + encodeURIComponent(sleutel) + "&callback=initGMap";
+    s.async = true;
+    s.onerror = () => s.remove();
+    document.head.appendChild(s);
+  }
+
   const vtLijst = document.getElementById("vt-lijst");
   const vtKaart = document.getElementById("vt-kaart");
   function zetWeergave(kaartActief) {
@@ -217,7 +267,7 @@
     vtKaart.classList.toggle("actief", kaartActief);
   }
   vtLijst.addEventListener("click", () => zetWeergave(false));
-  vtKaart.addEventListener("click", () => zetWeergave(true));
+  vtKaart.addEventListener("click", () => { zetWeergave(true); laadGoogleMaps(); });
 
   document.getElementById("hood-grid").innerHTML = stad.buurten.map(b => {
     const n = stad.spots.filter(s => s.buurt === b.naam).length;

@@ -467,3 +467,18 @@
 .sec-title::after { order: 1; }
 .sec-title .view-toggle { order: 2; }
 [hidden] { display: none !important; }
+
+/* ---------- google maps ---------- */
+.gmap { width: 100%; aspect-ratio: 16/9; border: 1px solid var(--line); }
+@media (max-width: 720px) { .gmap { aspect-ratio: 4/5; } }
+.gmap-lbl {
+  transform: translateY(20px);
+  background: rgba(255,255,255,.94); border: 1px solid var(--line);
+  padding: 3px 8px; letter-spacing: .1em; text-transform: uppercase;
+}
+.kaartje { margin-top: 24px; }
+.kaartje iframe {
+  display: block; width: 100%; aspect-ratio: 4/3;
+  border: 1px solid var(--line); filter: grayscale(.85) contrast(1.02);
+}
+#btn-route { margin-top: 12px; }
