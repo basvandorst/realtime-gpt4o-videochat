@@ -341,3 +341,66 @@
   letter-spacing: .16em; text-transform: uppercase; justify-self: start;
 }
 .terug:hover { text-decoration: underline; text-underline-offset: 5px; }
+
+/* ---------- byline + delen ---------- */
+.spot-byline {
+  display: flex; align-items: center; gap: 16px;
+  margin-top: 30px; flex-wrap: wrap;
+}
+.avatar {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--ink); color: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-indent: .1em;
+}
+.spot-byline .wie { font-size: .7rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.spot-byline .wie span { display: block; color: var(--grey); margin-top: 3px; }
+.share { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.share .aantal { font-size: .7rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--grey); margin-right: 8px; }
+.share a {
+  width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink); transition: all .2s;
+}
+.share a:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.share svg { width: 15px; height: 15px; fill: currentColor; }
+@media (max-width: 640px) { .share { margin-left: 0; } }
+
+/* ---------- galerij ---------- */
+.galerij { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 44px; }
+.galerij .photo { aspect-ratio: 4/3; overflow: hidden; }
+.galerij .photo.breed { grid-column: 1 / -1; aspect-ratio: 16/7; }
+@media (max-width: 560px) { .galerij { grid-template-columns: 1fr; } .galerij .photo.breed { aspect-ratio: 4/3; } }
+.bijschrift {
+  grid-column: 1 / -1; font-family: var(--serif); font-style: italic;
+  color: var(--grey); font-size: .92rem;
+}
+
+/* ---------- info-card social ---------- */
+.volgers-blok { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center; }
+.volgers-blok .cijfers { display: flex; justify-content: center; gap: 32px; margin-bottom: 18px; }
+.volgers-blok .cijfers b { display: block; font-family: var(--serif); font-size: 1.5rem; font-weight: 500; }
+.volgers-blok .cijfers span { font-size: .62rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--grey); }
+.btn-insta {
+  display: block; text-align: center; text-decoration: none;
+  background: var(--ink); color: var(--bg); padding: 14px;
+  font-size: .7rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase;
+  transition: opacity .2s;
+}
+.btn-insta:hover { opacity: .82; }
+
+/* ---------- instagram-strook ---------- */
+.insta { border-top: 1px solid var(--line); padding: 72px 0 90px; }
+.insta-head { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 32px; }
+.insta-head .handle { font-family: var(--serif); font-size: clamp(1.4rem, 3vw, 2rem); }
+.insta-head .stats { font-size: .68rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--grey); }
+.insta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+@media (max-width: 720px) { .insta-grid { grid-template-columns: repeat(2, 1fr); } }
+.insta-grid .photo { aspect-ratio: 1/1; overflow: hidden; }
+.insta-grid a { text-decoration: none; display: block; position: relative; }
+.likes {
+  position: absolute; left: 12px; bottom: 12px; z-index: 2;
+  background: rgba(17,17,17,.72); color: #fff;
+  font-size: .62rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+  padding: 6px 11px;
+}

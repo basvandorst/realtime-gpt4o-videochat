@@ -31,21 +31,57 @@
       <div class="cat" id="spot-cat"></div>
       <h1 id="spot-title"></h1>
       <span class="spot-status" id="spot-status"></span>
+      <div class="spot-byline reveal">
+        <span class="avatar" id="byline-avatar">OP</span>
+        <div class="wie" id="byline-wie">Door de redactie<span id="byline-datum"></span></div>
+        <div class="share">
+          <span class="aantal" id="share-aantal"></span>
+          <a id="share-fb" href="#" target="_blank" rel="noopener" aria-label="Deel op Facebook" title="Deel op Facebook">
+            <svg viewBox="0 0 24 24"><path d="M13.5 21v-8.2h2.8l.4-3.2h-3.2V7.5c0-.9.3-1.6 1.7-1.6h1.6V3.1c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.5H7.6v3.2h2.8V21h3.1z"/></svg>
+          </a>
+          <a id="share-x" href="#" target="_blank" rel="noopener" aria-label="Deel op X" title="Deel op X">
+            <svg viewBox="0 0 24 24"><path d="M17.8 3h3l-6.6 7.5L22 21h-6.1l-4.8-6.2L5.6 21h-3l7-8L2.5 3h6.2l4.3 5.7L17.8 3zm-1 16.2h1.7L7.7 4.7H5.9l10.9 14.5z"/></svg>
+          </a>
+          <a id="share-wa" href="#" target="_blank" rel="noopener" aria-label="Deel via WhatsApp" title="Deel via WhatsApp">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.7 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.6-1.2.1-.2 0-.4 0-.5l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.2-.2-.2-.5-.4z"/></svg>
+          </a>
+          <a id="share-pin" href="#" target="_blank" rel="noopener" aria-label="Bewaar op Pinterest" title="Bewaar op Pinterest">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12c0 4.2 2.6 7.9 6.4 9.3-.1-.8-.2-2 0-2.9l1.2-4.9s-.3-.6-.3-1.4c0-1.3.8-2.3 1.7-2.3.8 0 1.2.6 1.2 1.3 0 .8-.5 2-.8 3.1-.2 1 .5 1.7 1.4 1.7 1.7 0 3-1.8 3-4.4 0-2.3-1.6-3.9-4-3.9a4.1 4.1 0 0 0-4.3 4.1c0 .8.3 1.7.7 2.2l.1.4-.3 1.1c0 .2-.1.2-.3.1-1.2-.6-2-2.4-2-3.9 0-3.2 2.3-6.1 6.6-6.1 3.5 0 6.2 2.5 6.2 5.8 0 3.5-2.2 6.3-5.2 6.3-1 0-2-.5-2.3-1.1l-.6 2.4c-.2.9-.8 2-1.2 2.6.9.3 1.9.4 2.9.4 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </header>
 
 <div class="wrap">
   <div class="spot-grid">
-    <article class="verhaal reveal" id="spot-verhaal"></article>
+    <div>
+      <article class="verhaal reveal" id="spot-verhaal"></article>
+      <div class="galerij reveal" id="galerij"></div>
+    </div>
 
     <aside class="info-card reveal">
       <h2>De details</h2>
       <dl id="spot-info"></dl>
+      <div class="volgers-blok">
+        <div class="cijfers" id="spot-cijfers"></div>
+        <a class="btn-insta" id="btn-insta" href="#" target="_blank" rel="noopener">Volg op Instagram</a>
+      </div>
       <a class="btn-ics" id="btn-ics" href="#" download>Zet in agenda</a>
     </aside>
   </div>
 </div>
+
+<section class="insta">
+  <div class="wrap">
+    <div class="insta-head reveal">
+      <span class="handle" id="insta-handle"></span>
+      <span class="stats" id="insta-stats"></span>
+    </div>
+    <div class="insta-grid" id="insta-grid"></div>
+  </div>
+</section>
 
 <section class="related">
   <div class="wrap">
@@ -104,16 +140,68 @@
   );
   document.getElementById("spot-verhaal").innerHTML = tekst.split("\n\n").map(p => `<p>${esc(p)}</p>`).join("");
 
+  // Social: deterministisch uit de naam, tot er echte data is
+  const seed = [...spot.naam].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 9973, 7);
+  const handle = "@" + slug(spot.naam).replace(/-/g, "");
+  const tld = { "Nederland": ".nl", "België": ".be", "Duitsland": ".de" }[stad.land] || ".com";
+  const site = slug(spot.naam).replace(/-/g, "") + tld;
+  const volgers = 800 + (seed % 62) * 100;
+  const posts = 36 + (seed % 240);
+  const shares = 120 + (seed % 680);
+  const fmtK = n => n >= 1000 ? (n / 1000).toFixed(1).replace(".", ",").replace(",0", "") + "K" : n;
+
+  // Byline + delen
+  document.getElementById("byline-avatar").textContent = stad.code.slice(0, 2);
+  document.getElementById("byline-datum").textContent = (komend ? "Opent " : "Geopend ") + fmt(spot.datum) + " · " + stad.naam;
+  document.getElementById("share-aantal").textContent = shares + " keer gedeeld";
+  const deelUrl = encodeURIComponent(location.href);
+  const deelTekst = encodeURIComponent(spot.naam + " — " + spot.tagline + " (" + stad.naam + ")");
+  document.getElementById("share-fb").href = "https://www.facebook.com/sharer/sharer.php?u=" + deelUrl;
+  document.getElementById("share-x").href = "https://twitter.com/intent/tweet?text=" + deelTekst + "&url=" + deelUrl;
+  document.getElementById("share-wa").href = "https://wa.me/?text=" + deelTekst + "%20" + deelUrl;
+  document.getElementById("share-pin").href = "https://pinterest.com/pin/create/button/?url=" + deelUrl + "&media=" + encodeURIComponent(spot.foto.src) + "&description=" + deelTekst;
+
   const rijen = [
     ["Status", komend ? "opent " + fmt(spot.datum) : "geopend " + fmt(spot.datum)],
     ["Categorie", spot.cat],
     ["Buurt", spot.buurt],
     ["Adres", spot.adres || "volgt"],
     ["Prijs & tijden", spot.meta],
-    ["Stad", stad.naam],
+    ["Instagram", handle],
+    ["Website", site],
   ];
   document.getElementById("spot-info").innerHTML = rijen.map(([t, d]) =>
     `<div class="rij"><dt>${esc(t)}</dt><dd>${esc(d)}</dd></div>`).join("");
+
+  // Volgers-blok + Instagram-knop
+  document.getElementById("spot-cijfers").innerHTML =
+    `<div><b>${fmtK(volgers)}</b><span>volgers</span></div><div><b>${posts}</b><span>posts</span></div>`;
+  document.getElementById("btn-insta").href = "https://instagram.com/" + handle.slice(1);
+
+  // Galerij: extra beelden passend bij de categorie
+  const POOL = {
+    "Koffie":   [FOTO.cafe, FOTO.croissant, FOTO.koffie, FOTO.tafel],
+    "Wijn":     [FOTO.tafel, FOTO.cafe, FOTO.wijn, FOTO.cocktails],
+    "Eten":     [FOTO.tafel, FOTO.cafe, FOTO.ramen, FOTO.wijn],
+    "Bakkerij": [FOTO.cafe, FOTO.koffie, FOTO.croissant, FOTO.tafel],
+    "Winkels":  [FOTO.straat, FOTO.cafe, FOTO.winkel, FOTO.koffie],
+    "Drinken":  [FOTO.straat, FOTO.tafel, FOTO.cocktails, FOTO.wijn],
+    "Cultuur":  [FOTO.boeken, FOTO.straat, FOTO.galerie, FOTO.cafe],
+  };
+  const pool = (POOL[spot.cat] || Object.values(FOTO)).filter(f => f.src !== spot.foto.src);
+  document.getElementById("galerij").innerHTML =
+    `<div class="photo breed">${foto(pool[0])}</div>` +
+    pool.slice(1, 3).map(f => `<div class="photo">${foto(f)}</div>`).join("") +
+    `<p class="bijschrift">In beeld: ${esc(spot.naam)}, ${esc(spot.buurt)} — fotografie ter illustratie.</p>`;
+
+  // Instagram-strook
+  document.getElementById("insta-handle").textContent = handle + " op Instagram";
+  document.getElementById("insta-stats").textContent = `${fmtK(volgers)} volgers · ${posts} posts · volgt ${34 + seed % 90}`;
+  const tegels = [spot.foto, ...pool].slice(0, 4);
+  document.getElementById("insta-grid").innerHTML = tegels.map((f, i) => `
+    <a href="https://instagram.com/${handle.slice(1)}" target="_blank" rel="noopener">
+      <div class="photo">${foto(f)}<span class="likes">♥ ${fmtK(80 + (seed * (i + 3)) % 1900)}</span></div>
+    </a>`).join("");
 
   // Agenda-knop: .ics met de openingsdatum (hele dag)
   const dt = spot.datum.replace(/-/g, "");
